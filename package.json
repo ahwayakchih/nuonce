@@ -1,7 +1,8 @@
 {
   "name": "nuonce",
-  "version": "1.1.0",
+  "version": "1.0.2",
   "description": "Wrap function so it will run only once, and each next call will simply return first result.",
+  "keywords": "once, once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
     "test": "npm run testWithObject && npm run testWithProxy",
@@ -34,5 +35,8 @@
   "homepage": "https://github.com/ahwayakchih/nuonce",
   "author": "Marcin Konicki <ahwayakchih@neoni.net>",
   "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/ahwayakchih/nuonce/issues"
+  },
   "tonicExample": "const nuonce = require('nuonce');"
 }
