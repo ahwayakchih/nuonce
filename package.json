@@ -1,0 +1,37 @@
+{
+  "name": "nuonce",
+  "version": "1.0.0",
+  "description": "Wrap function so it will run only once, and each next call will simply return first result.",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run testWithObject && npm run testWithProxy",
+    "testWithProxy": "node --harmony-proxies ./node_modules/.bin/tape -r ./test | ./node_modules/.bin/tap-diff",
+    "testWithObject": "tape -r ./test | ./node_modules/.bin/tap-diff",
+    "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
+    "benchmark1call0props": "CALLS=1 PROPS=0 node --harmony-proxies ./benchmarks/index.js",
+    "benchmark1call3props": "CALLS=1 PROPS=3 node --harmony-proxies ./benchmarks/index.js",
+    "benchmark50calls0props": "CALLS=50 PROPS=0 node --harmony-proxies ./benchmarks/index.js",
+    "benchmark50calls3props": "CALLS=50 PROPS=3 node --harmony-proxies ./benchmarks/index.js",
+    "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
+    "checkCoverage": "node --harmony-proxies ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- -r ./test > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)"
+  },
+  "engines": {
+    "node": ">=5.5"
+  },
+  "devDependencies": {
+    "beautify-benchmark": "git+https://github.com/ahwayakchih/beautify-benchmark.git",
+    "benchmark": "^2.1.0",
+    "docdash": "^0.1.0",
+    "eslint": "^2.8.0",
+    "istanbul": "^0.4.3",
+    "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
+    "once": "git+https://github.com/isaacs/once.git",
+    "opener": "^1.4.1",
+    "tap-diff": "^0.1.1",
+    "tape": "^4.5.1",
+    "tape-catch": "^1.0.4"
+  },
+  "homepage": "https://github.com/ahwayakchih/nuonce",
+  "author": "Marcin Konicki <ahwayakchih@neoni.net>",
+  "license": "ISC"
+}
