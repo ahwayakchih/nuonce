@@ -21,6 +21,12 @@ Nuonce is targetted for use in node.js application. Although it may work in web 
 npm install nuonce
 ```
 
+or:
+
+```sh
+npm install https://github.com/ahwayakchih/nuonce
+```
+
 
 ## Usage
 
