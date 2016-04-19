@@ -1,6 +1,7 @@
 const benchmark = require('benchmark').Suite;
 const results   = require('beautify-benchmark');
 const once      = require('once');
+const oncejs    = require('once.js/once.min.js');
 const os        = require('os');
 const nuonce    = require('../index.js');
 
@@ -18,6 +19,11 @@ const test = benchmark('nuonce');
 
 test.add('once', function () {
 	var f = once(prepareTestTarget(props));
+	return simulateRepeatedCalls(f, args, multiple);
+});
+
+test.add('once.js', function () {
+	var f = oncejs(prepareTestTarget(props));
 	return simulateRepeatedCalls(f, args, multiple);
 });
 
@@ -96,11 +102,16 @@ function logInfo () {
 	infoOnce.version = 'v' + infoOnce.version;
 	columnsUpdate(columns, infoOnce);
 
+	var infoOnceJS = require('once.js/package.json');
+	infoOnceJS.version = 'v' + infoOnceJS.version;
+	columnsUpdate(columns, infoOnceJS);
+
 	var infoNuonce = require('../package.json');
 	infoNuonce.version = 'v' + infoNuonce.version;
 	columnsUpdate(columns, infoNuonce);
 
 	console.log('- ' + columnsText(columns, infoOnce));
+	console.log('- ' + columnsText(columns, infoOnceJS));
 	console.log('- ' + columnsText(columns, infoNuonce));
 	console.log('');
 
