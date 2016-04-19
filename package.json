@@ -33,5 +33,6 @@
   },
   "homepage": "https://github.com/ahwayakchih/nuonce",
   "author": "Marcin Konicki <ahwayakchih@neoni.net>",
-  "license": "ISC"
+  "license": "ISC",
+  "tonicExample": "const nuonce = require('nuonce');"
 }
