@@ -38,5 +38,9 @@
   "bugs": {
     "url": "https://github.com/ahwayakchih/nuonce/issues"
   },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/ahwayakchih/nuonce.git"
+  },
   "tonicExample": "const nuonce = require('nuonce');"
 }
