@@ -1,6 +1,6 @@
 {
   "name": "nuonce",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "Wrap function so it will run only once, and each next call will simply return first result.",
   "main": "index.js",
   "scripts": {
