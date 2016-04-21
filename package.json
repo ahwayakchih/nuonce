@@ -1,7 +1,7 @@
 {
   "name": "nuonce",
   "version": "1.0.2",
-  "description": "Wrap function so it will run only once, and each next call will simply return first result.",
+  "description": "Nuanced implementation of `once` functionality, optimized for node.js",
   "keywords": "once, once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
