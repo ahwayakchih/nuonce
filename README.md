@@ -159,5 +159,5 @@ Test function with 3 properties, called 50 times with 1 argument
   nuonce.copied + called x 2,205,040 ops/sec ±0.73% (89 runs sampled)
   nuonce.copied          x 1,948,193 ops/sec ±0.78% (90 runs sampled)
   once                   x   864,082 ops/sec ±0.62% (86 runs sampled)
-  nuonce.proxied         x   188,439 ops/sec ±0.47% (92 runs sampled)s
+  nuonce.proxied         x   188,439 ops/sec ±0.47% (92 runs sampled)
 ```
