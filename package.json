@@ -31,7 +31,7 @@
     "opener": "^1.4.1",
     "tap-diff": "^0.1.1",
     "tape": "^4.5.1",
-    "tape-catch": "^1.0.4"
+    "tape-catch": "^1.0.5"
   },
   "homepage": "https://github.com/ahwayakchih/nuonce",
   "author": "Marcin Konicki <ahwayakchih@neoni.net>",
