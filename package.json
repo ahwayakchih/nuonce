@@ -1,6 +1,6 @@
 {
   "name": "nuonce",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Nuanced implementation of `once` functionality, optimized for node.js",
   "keywords": "once, once, single, function, call, run, node",
   "main": "index.js",
