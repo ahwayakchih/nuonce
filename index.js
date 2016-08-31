@@ -137,11 +137,11 @@ function _nuoncesPrepare (length) {
 		args.push('a' + i);
 	}
 
-	/* eslint-disable */
+	/* eslint-disable no-new-func */
 	// Here we replace with a bit ugly regex, we could use nicer and cleaner comment with some custom token instead,
 	// but when coverage is run, comments seem to be dropped before we can use them.
 	_nuonces[length] = new Function('fn', src.replace(/function\s+_f\s*\(\)/, 'function _f (' + args.join(', ') + ')'));
-	/* eslint-enable */
+	/* eslint-enable no-new-func */
 
 	return _nuonces[length];
 }
