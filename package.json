@@ -5,16 +5,14 @@
   "keywords": "once, once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
-    "test": "npm run testWithObject && npm run testWithProxy",
-    "testWithProxy": "node --harmony-proxies ./node_modules/.bin/tape ./test/index.js | ./node_modules/.bin/tap-diff",
-    "testWithObject": "tape ./test/index.js | ./node_modules/.bin/tap-diff",
+    "test": "tape ./test/index.js | ./node_modules/.bin/tap-diff",
     "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
-    "benchmark1call0props": "CALLS=1 PROPS=0 node --harmony-proxies ./benchmarks/index.js",
-    "benchmark1call3props": "CALLS=1 PROPS=3 node --harmony-proxies ./benchmarks/index.js",
-    "benchmark50calls0props": "CALLS=50 PROPS=0 node --harmony-proxies ./benchmarks/index.js",
-    "benchmark50calls3props": "CALLS=50 PROPS=3 node --harmony-proxies ./benchmarks/index.js",
+    "benchmark1call0props": "CALLS=1 PROPS=0 node ./benchmarks/index.js",
+    "benchmark1call3props": "CALLS=1 PROPS=3 node ./benchmarks/index.js",
+    "benchmark50calls0props": "CALLS=50 PROPS=0 node ./benchmarks/index.js",
+    "benchmark50calls3props": "CALLS=50 PROPS=3 node ./benchmarks/index.js",
     "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
-    "checkCoverage": "node --harmony-proxies ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- ./test/index.js > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)",
+    "checkCoverage": "node ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- ./test/index.js > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)",
     "checkMemory": "mkdir -p reports && node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
   },
   "engines": {
