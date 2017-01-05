@@ -20,9 +20,9 @@
   },
   "devDependencies": {
     "beautify-benchmark": "git+https://github.com/ahwayakchih/beautify-benchmark.git",
-    "benchmark": "^2.1.2",
+    "benchmark": "^2.1.3",
     "docdash": "^0.4.0",
-    "eslint": "^3.9.1",
+    "eslint": "^3.12.2",
     "heapdump": "^0.3.7",
     "istanbul": "^0.4.4",
     "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
@@ -31,7 +31,7 @@
     "onetime": "^2.0.0",
     "opener": "^1.4.2",
     "tap-diff": "^0.1.1",
-    "tape": "^4.6.2",
+    "tape": "^4.6.3",
     "tape-catch": "^1.0.6"
   },
   "homepage": "https://github.com/ahwayakchih/nuonce",
