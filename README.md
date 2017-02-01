@@ -107,7 +107,7 @@ For browser use, it may be easier to use [`once.js`](https://github.com/daniellm
 
 ## Benchmarks
 
-Some benchmarks for comparison (you can re-run them locally with: `npm run benchmarks`, after running `npm install --no-shrinkwrap`):
+Some benchmarks results for comparison (you can re-run them locally with: `npm run benchmarks`, after running `npm install --no-shrinkwrap`):
 
 ```markdown
 Running on node v7.4.0 with Intel(R) Core(TM) i7-3537U CPU @ 2.00GHz x 4
@@ -165,4 +165,16 @@ Test function with 3 properties, called 50 times with 1 argument
   once                   x   834,643 ops/sec ±3.25% (87 runs sampled)
   nuonce.proxied         x   247,593 ops/sec ±0.79% (94 runs sampled)
   onetime                x    42,473 ops/sec ±1.49% (84 runs sampled)
+```
+
+You can also run a single benchmark run by calling:
+
+```sh
+npm run benchmark
+```
+
+For a single benchmark run, you can optionally override default numbers for arguments, properties and number of calls:
+
+```sh
+ARGS=0 PROPS=0 CALLS=30
 ```
