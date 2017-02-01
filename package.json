@@ -17,7 +17,7 @@
     "checkMemory": "mkdir -p reports && node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
   },
   "engines": {
-    "node": ">=5.5"
+    "node": ">=6.9"
   },
   "devDependencies": {
     "beautify-benchmark": "git+https://github.com/ahwayakchih/beautify-benchmark.git",
