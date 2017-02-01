@@ -137,10 +137,12 @@ function _nuoncesPrepare (length) {
 		args.push('a' + i);
 	}
 
+	args.push('...args');
+
 	/* eslint-disable no-new-func */
 	// Here we replace with a bit ugly regex, we could use nicer and cleaner comment with some custom token instead,
 	// but when coverage is run, comments seem to be dropped before we can use them.
-	_nuonces[length] = new Function('fn', src.replace(/function\s+_f\s*\(\)/, 'function _f (' + args.join(', ') + ')'));
+	_nuonces[length] = new Function('fn', src.replace(/function\s+_f\s*\([^)]*\)/, 'function _f (' + args.join(', ') + ')').replace('fn.apply(this, args)', 'fn.call(this, ' + args.join(', ') + ')'));
 	/* eslint-enable no-new-func */
 
 	return _nuonces[length];
@@ -160,21 +162,9 @@ function _nuonce (fn) {
 
 	var r;
 
-	function _f () {
+	function _f (...args) {
 		if (fn) {
-			// Here we could use local array with a loop copying arguments into it,
-			// to prevent deoptimization in V8, but it turns out that actually make things A LOT slower.
-			// Probably because of the nature of `once`: it is ment to be called just once, with every next
-			// call using cached result. So building a loop and additional array, and making V8 build/compile
-			// optimized version just to be left mostly unused does add a lot of work to be wasted anyway.
-			// Optimized/compiled version could be more optimal for code that calls it several times,
-			// but that is not the situation here.
-			// var args = new Array(arguments.length);
-			// for (var i = 0, imax = args.length; i < imax; i++) {
-			// 	args[i] = arguments[i];
-			// }
-			// r = fn.apply(this, args);
-			r = fn.apply(this, arguments);
+			r = fn.apply(this, args);
 
 			// Free any references to target function
 			fn = null;
