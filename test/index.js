@@ -21,6 +21,7 @@ function runTests (nuonce, t) {
 	testIfThrowsOnNonFunction(nuonce, t);
 	testIfNuonceReturnsFunction(nuonce, t);
 	testIfItReturnsSameValue(nuonce, t);
+	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
 
 	if (nuonce === nuonces.stripped) {
@@ -52,6 +53,19 @@ function testIfNuonceReturnsFunction (nuonce, t) {
 function testIfItReturnsSameValue (nuonce, t) {
 	const testFunction = nuonce(Math.random);
 	t.strictEqual(testFunction(), testFunction(), 'Should return value from wrapped function');
+}
+
+function testIfItPassessAllArguments (nuonce, t) {
+	const sum = function sum (a, b, c) {
+		return a + b + c;
+	};
+	const testFunction = nuonce(sum);
+
+	var a = Math.random();
+	var b = Math.random();
+	var c = Math.random();
+
+	t.strictEqual(testFunction(a, b, c), sum(a, b, c), 'Should return value from wrapped function');
 }
 
 function testIfOriginalFunctionIsCalledOnlyOnce (nuonce, t) {
