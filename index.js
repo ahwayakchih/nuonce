@@ -122,6 +122,8 @@ var _nuonceSource = _nuonce.toString().replace(/^function[^{]*{|}$/g, '');
 
 // Strip coverage stuff, to prevent test failures
 _nuonceSource = _nuonceSource.replace(/__cov_[^+]+\+\+;/g, '');
+// Prepare it for injecting arguments
+_nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*args\)/, 'fn.call(this, ...args)');
 
 /**
  * Creates new variation of _nuonce for specified length of arguments and stores it in `_nuonces`.
@@ -142,7 +144,7 @@ function _nuoncesPrepare (length) {
 	/* eslint-disable no-new-func */
 	// Here we replace with a bit ugly regex, we could use nicer and cleaner comment with some custom token instead,
 	// but when coverage is run, comments seem to be dropped before we can use them.
-	_nuonces[length] = new Function('fn', src.replace('...args', args.join(', ')).replace('fn.apply(this, args)', 'fn.call(this, ' + args.join(', ') + ')'));
+	_nuonces[length] = new Function('fn', src.replace('...args', args.join(', ')).replace('this, ...args', 'this, ' + args.join(', ')));
 	/* eslint-enable no-new-func */
 
 	return _nuonces[length];
@@ -276,8 +278,8 @@ function _nuonceWithProxyNew (fn) {
 		},
 		construct: function (ctx, args, target) {
 			if (fn) {
-				r = fn.apply(target, args);
-				fn = true;
+				r = fn.apply(ctx, args);
+				fn = null;
 			}
 
 			return r;

@@ -21,6 +21,7 @@ function runTests (nuonce, t) {
 	testIfThrowsOnNonFunction(nuonce, t);
 	testIfNuonceReturnsFunction(nuonce, t);
 	testIfItReturnsSameValue(nuonce, t);
+	testIfItCreatesSingleInstanceOfObject(nuonce, t);
 	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
 
@@ -55,6 +56,14 @@ function testIfItReturnsSameValue (nuonce, t) {
 	t.strictEqual(testFunction(), testFunction(), 'Should return value from wrapped function');
 }
 
+function testIfItCreatesSingleInstanceOfObject (nuonce, t) {
+	const TestConstructor = nuonce(function () {
+		this.title = 'test';
+		return this;
+	});
+	t.strictEqual(new TestConstructor(), new TestConstructor(), 'Should return the same instance of object');
+}
+
 function testIfItPassessAllArguments (nuonce, t) {
 	const sum = function sum (a, b, c) {
 		return a + b + c;
@@ -65,7 +74,7 @@ function testIfItPassessAllArguments (nuonce, t) {
 	var b = Math.random();
 	var c = Math.random();
 
-	t.strictEqual(testFunction(a, b, c), sum(a, b, c), 'Should return value from wrapped function');
+	t.strictEqual(testFunction(a, b, c), sum(a, b, c), 'Should pass all arguments to wrapped function');
 }
 
 function testIfOriginalFunctionIsCalledOnlyOnce (nuonce, t) {
