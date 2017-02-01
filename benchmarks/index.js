@@ -72,10 +72,11 @@ if (nuonce.proxied) {
 }
 
 test.on('start', function () {
-	const times = `${multiple} time` + (multiple > 1 ? 's' : '');
-	const values = `${args} argument` + (args > 1 ? 's' : '');
+	const times = `${multiple} time` + (multiple === 1 ? '' : 's');
+	const values = `${args} argument` + (args === 1 ? '' : 's');
+	const properties = `${props} propert` + (props === 1 ? 'y' : 'ies');
 
-	console.log(`Test function with ${props} properties, called ${times} with ${values}`);
+	console.log(`Test function with ${properties}, called ${times} with ${values}`);
 	console.log('');
 });
 
