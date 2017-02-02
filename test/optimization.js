@@ -30,7 +30,7 @@ function createFn (argc) {
 
 var fn;
 for (let i = 0; i < 3000; ++i) {
-	fn = nuonce.stripped(createFn(3));
+	fn = nuonce.stripped(createFn(Math.floor(Math.random(4))));
 	for (let j = 0; j < 30; j++) {
 		fn(j);
 	}
