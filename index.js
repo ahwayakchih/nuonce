@@ -143,8 +143,6 @@ function _nuoncesPrepare (length) {
 	var argv = args.join(', ');
 
 	/* eslint-disable no-new-func */
-	// Here we replace with a bit ugly regex, we could use nicer and cleaner comment with some custom token instead,
-	// but when coverage is run, comments seem to be dropped before we can use them.
 	_nuonces[length] = new Function('fn', src.replace('...args', argv).replace('this, ...args', 'this, ' + argv));
 	/* eslint-enable no-new-func */
 
