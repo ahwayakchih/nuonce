@@ -133,18 +133,19 @@ _nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*args\)/, 'fn.call(this
  */
 function _nuoncesPrepare (length) {
 	var src = _nuonceSource;
-	var args = [];
+	var args = new Array(length + 1);
 
-	for (var i = 0; i < length; i++) {
-		args.push('a' + i);
+	for (var i = length - 1; i >= 0; i--) {
+		args[i] = 'a' + i;
 	}
 
-	args.push('...args');
+	args[length] = '...args';
+	var argv = args.join(', ');
 
 	/* eslint-disable no-new-func */
 	// Here we replace with a bit ugly regex, we could use nicer and cleaner comment with some custom token instead,
 	// but when coverage is run, comments seem to be dropped before we can use them.
-	_nuonces[length] = new Function('fn', src.replace('...args', args.join(', ')).replace('this, ...args', 'this, ' + args.join(', ')));
+	_nuonces[length] = new Function('fn', src.replace('...args', argv).replace('this, ...args', 'this, ' + argv));
 	/* eslint-enable no-new-func */
 
 	return _nuonces[length];
@@ -276,7 +277,7 @@ function _nuonceWithProxyNew (fn) {
 
 			return r;
 		},
-		construct: function (ctx, args, target) {
+		construct: function (ctx, args/* , target*/) {
 			if (fn) {
 				r = fn.apply(ctx, args);
 				fn = null;
