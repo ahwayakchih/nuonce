@@ -110,61 +110,61 @@ For browser use, it may be easier to use [`once.js`](https://github.com/daniellm
 Some benchmarks results for comparison (you can re-run them locally with: `npm run benchmarks`, after running `npm install --no-shrinkwrap`):
 
 ```markdown
-Running on node v7.7.2 with Intel(R) Core(TM) i7-3537U CPU @ 2.00GHz x 4
+Running on node v7.8.0 with Intel(R) Core(TM) i7-3537U CPU @ 2.00GHz x 4
 
 Testing:
 - once    v1.4.0 https://github.com/isaacs/once#readme           
 - once.js v0.0.4 https://github.com/daniellmb/once.js            
-- onetime v2.0.0 https://github.com/sindresorhus/onetime#readme  
+- onetime v2.0.1 https://github.com/sindresorhus/onetime#readme  
 - nuonce  v1.0.6 https://github.com/ahwayakchih/nuonce           
 
 Test function with 0 properties, called 1 time with 1 argument
 
   7 tests completed.
 
-  nuonce.stripped        x 6,130,420 ops/sec ±3.19% (87 runs sampled)
-  once.js                x 5,816,768 ops/sec ±3.31% (83 runs sampled)
-  nuonce.copied          x 3,950,596 ops/sec ±0.64% (90 runs sampled)
-  nuonce.proxied         x 3,541,148 ops/sec ±3.27% (87 runs sampled)
-  nuonce.copied + called x 3,170,156 ops/sec ±1.29% (90 runs sampled)
-  once                   x 1,557,637 ops/sec ±2.33% (86 runs sampled)
-  onetime                x    50,717 ops/sec ±3.83% (86 runs sampled)
+  nuonce.stripped        x 6,177,562 ops/sec ±0.38% (92 runs sampled)
+  once.js                x 5,777,958 ops/sec ±3.37% (87 runs sampled)
+  nuonce.copied          x 3,891,888 ops/sec ±0.69% (90 runs sampled)
+  nuonce.proxied         x 3,627,549 ops/sec ±0.84% (90 runs sampled)
+  nuonce.copied + called x 3,308,830 ops/sec ±0.87% (89 runs sampled)
+  once                   x 1,418,047 ops/sec ±2.07% (87 runs sampled)
+  onetime                x    49,833 ops/sec ±2.97% (85 runs sampled)
 
 Test function with 0 properties, called 50 times with 1 argument
 
   7 tests completed.
 
-  nuonce.stripped        x 3,598,422 ops/sec ±1.62% (91 runs sampled)
-  once.js                x 3,496,126 ops/sec ±1.70% (86 runs sampled)
-  nuonce.copied + called x 2,395,959 ops/sec ±0.99% (92 runs sampled)
-  nuonce.copied          x 2,121,440 ops/sec ±3.08% (87 runs sampled)
-  once                   x 1,321,693 ops/sec ±3.20% (82 runs sampled)
-  nuonce.proxied         x   245,182 ops/sec ±0.35% (93 runs sampled)
-  onetime                x    50,440 ops/sec ±3.20% (84 runs sampled)
+  once.js                x 3,553,925 ops/sec ±0.61% (90 runs sampled)
+  nuonce.stripped        x 3,445,078 ops/sec ±0.36% (89 runs sampled)
+  nuonce.copied          x 2,668,206 ops/sec ±1.33% (90 runs sampled)
+  nuonce.copied + called x 2,400,411 ops/sec ±1.15% (92 runs sampled)
+  once                   x 1,081,623 ops/sec ±0.78% (87 runs sampled)
+  nuonce.proxied         x   231,969 ops/sec ±0.87% (90 runs sampled)
+  onetime                x    49,285 ops/sec ±1.66% (83 runs sampled)
 
 Test function with 3 properties, called 1 time with 1 argument
 
   7 tests completed.
 
-  nuonce.stripped        x 6,559,268 ops/sec ±0.75% (93 runs sampled)
-  once.js                x 6,108,891 ops/sec ±3.52% (89 runs sampled)
-  nuonce.proxied         x 3,605,737 ops/sec ±2.22% (86 runs sampled)
-  nuonce.copied + called x 3,222,776 ops/sec ±0.84% (91 runs sampled)
-  nuonce.copied          x 2,278,993 ops/sec ±0.52% (92 runs sampled)
-  once                   x   760,684 ops/sec ±0.66% (91 runs sampled)
-  onetime                x    41,815 ops/sec ±3.88% (83 runs sampled)
+  nuonce.stripped        x 6,427,591 ops/sec ±0.61% (91 runs sampled)
+  once.js                x 6,000,135 ops/sec ±0.68% (88 runs sampled)
+  nuonce.proxied         x 3,794,778 ops/sec ±0.80% (92 runs sampled)
+  nuonce.copied + called x 2,587,259 ops/sec ±1.33% (91 runs sampled)
+  nuonce.copied          x 2,315,004 ops/sec ±2.50% (90 runs sampled)
+  once                   x   815,014 ops/sec ±1.86% (89 runs sampled)
+  onetime                x    40,572 ops/sec ±1.38% (83 runs sampled)
 
 Test function with 3 properties, called 50 times with 1 argument
 
   7 tests completed.
 
-  nuonce.stripped        x 3,758,771 ops/sec ±0.27% (93 runs sampled)
-  once.js                x 3,545,531 ops/sec ±2.97% (91 runs sampled)
-  nuonce.copied + called x 1,981,202 ops/sec ±0.62% (88 runs sampled)
-  nuonce.copied          x 1,743,913 ops/sec ±1.06% (90 runs sampled)
-  once                   x   803,377 ops/sec ±2.51% (86 runs sampled)
-  nuonce.proxied         x   230,951 ops/sec ±1.39% (91 runs sampled)
-  onetime                x    42,820 ops/sec ±1.46% (82 runs sampled)
+  nuonce.stripped        x 3,733,887 ops/sec ±0.45% (92 runs sampled)
+  once.js                x 3,535,212 ops/sec ±2.99% (83 runs sampled)
+  nuonce.copied + called x 2,340,764 ops/sec ±0.90% (90 runs sampled)
+  nuonce.copied          x 1,861,231 ops/sec ±0.72% (91 runs sampled)
+  once                   x   735,307 ops/sec ±2.82% (85 runs sampled)
+  nuonce.proxied         x   229,536 ops/sec ±0.64% (93 runs sampled)
+  onetime                x    41,275 ops/sec ±1.93% (84 runs sampled)
 ```
 
 You can also run a single benchmark run by calling:
