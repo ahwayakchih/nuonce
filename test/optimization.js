@@ -1,5 +1,16 @@
 // Run through node with following flags: --trace-deopt --trace-opt --allow-natives-syntax
-var nuonce = require('../index.js');
+const nuonces = require('../index.js');
+const once = nuonces.stripped;
+
+const reportFiles = process.execArgv.reduce((result, value) => {
+	var m = value.match(/^--(?:trace_hydrogen_file|redirect-code-traces-to)=([\w\W]+)$/);
+	if (m && m[1]) {
+		result.push(m[1]);
+	}
+	return result;
+}, []).join(' and ');
+
+console.log('nuonce properties are ' + (%HasFastProperties(nuonces) ? 'fast' : 'slow'));
 
 function printStatus(fn) {
 	var status = %GetOptimizationStatus(fn);
@@ -23,18 +34,24 @@ function createFn (argc) {
 	return new Function(...opts);
 }
 
-// nuonce.copied(createFn(3));
-// nuonce.copied(createFn(2));
-// %OptimizeFunctionOnNextCall(nuonce.copied);
-// nuonce.copied(createFn(1));
+// Optimize our fn creator so we do not have to check irrelevant deoptimizations
+createFn(3);
+createFn(2);
+%OptimizeFunctionOnNextCall(createFn);
+createFn(1);
 
 var fn;
 for (let i = 0; i < 3000; ++i) {
-	fn = nuonce.stripped(createFn(Math.floor(Math.random(4))));
+	fn = once(createFn(Math.floor(Math.random(4))));
 	for (let j = 0; j < 30; j++) {
 		fn(j);
 	}
 }
 
-printStatus(nuonce.stripped);
+printStatus(once);
 printStatus(fn);
+
+if (reportFiles.length) {
+	console.log('You can now visit http://mrale.ph/irhydra/2/.');
+	console.log('Upload ' + reportFiles + ' there for further investigation.');
+}

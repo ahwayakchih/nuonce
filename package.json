@@ -17,7 +17,7 @@
     "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
     "checkCoverage": "node ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- ./test/index.js > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)",
     "checkMemory": "mkdir -p reports && node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'",
-    "checkOptimization": "node --trace-deopt --trace-opt --allow-natives-syntax ./test/optimization.js"
+    "checkOptimization": "mkdir -p reports && node --trace-hydrogen --trace_hydrogen_file=./reports/hydra-hydrogen.cfg --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=./reports/hydra-code.asm --allow-natives-syntax ./test/optimization.js"
   },
   "engines": {
     "node": ">=6.9"
