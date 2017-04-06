@@ -66,7 +66,7 @@ test.add('nuonce.copied + called', function () {
 
 test.add('nuonce.proxied', function () {
 	var f = nuonce.proxied(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, multiple);
+	return simulateRepeatedCalls(f, args, multiple);
 });
 
 test.on('start', function () {
@@ -182,21 +182,21 @@ function prepareTestTarget (numberOfProperties) {
 		return result;
 	}
 
-	result = function (a) {
+	result = function (...args) {
 		// Return something stupid that cannot be simply optimized to a static value
-		return (Math.random() * a) + numberOfProperties;
+		return (Math.random() * args.length) + numberOfProperties;
 	};
 
 	if (!numberOfProperties) {
 		return result;
 	}
 
-	var key = 'foo' + Math.random();
-	result[key] = Math.random;
+	var key = 'foo';
+	result[key] = () => Math.random();
 
 	for (var i = 1; i < numberOfProperties; i++) {
-		key = 'foo' + Math.random();
-		result[key] = Math.random;
+		key = 'foo' + (Math.random() % 1);
+		result[key] = () => Math.random();
 	}
 
 	targetsWithProps[numberOfProperties] = result;
@@ -217,11 +217,15 @@ function simulateRepeatedCalls (f, args, multiple) {
 	var i;
 	var argv = new Array(args);
 	for (i = args - 1; i > -1; i--) {
-		args[i] = Math.random();
+		argv[i] = Math.random();
 	}
 
-	for (i = 0; i < multiple; i++) {
-		result = result && f.apply(this, argv) && props && f.foo();
+	for (i = multiple; i > -1; i--) {
+		result += f.call(this, argv);
+	}
+
+	if (props) {
+		result += f.foo && f.foo();
 	}
 
 	return result;

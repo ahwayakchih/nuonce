@@ -15,7 +15,6 @@
  * @see {@link module:nuonce.default}, {@link module:nuonce.stripped}, {@link module:nuonce.copied}, {@link module:nuonce.proxied}
  */
 module.exports = {
-
 	/**
 	 * Returns callable function that will call `fn` function only once.
 	 * Every next time returned object is called, it will return value from the first call.
