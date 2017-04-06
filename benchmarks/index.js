@@ -184,7 +184,7 @@ function prepareTestTarget (numberOfProperties) {
 
 	result = function (...args) {
 		// Return something stupid that cannot be simply optimized to a static value
-		return (Math.random() * args.length) + numberOfProperties;
+		return Math.random() + args.length + numberOfProperties;
 	};
 
 	if (!numberOfProperties) {
@@ -208,6 +208,7 @@ function prepareTestTarget (numberOfProperties) {
  * Call given function multiple times, call its `foo` method too (if available).
  *
  * @param {Function} f
+ * @param {number}   args
  * @param {number}   multiple
  * @return {boolean}
  */
