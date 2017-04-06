@@ -10,7 +10,7 @@ const reportFiles = process.execArgv.reduce((result, value) => {
 	return result;
 }, []).join(' and ');
 
-console.log('nuonce properties are ' + (%HasFastProperties(nuonces) ? 'fast' : 'slow'));
+console.log('nuonce properties are treated as ' + (%HasFastProperties(nuonces) ? 'fast' : 'slow'));
 
 function printStatus(fn) {
 	var status = %GetOptimizationStatus(fn);
@@ -51,7 +51,7 @@ for (let i = 0; i < 3000; ++i) {
 printStatus(once);
 printStatus(fn);
 
-if (reportFiles.length) {
+if (reportFiles) {
 	console.log('You can now visit http://mrale.ph/irhydra/2/.');
 	console.log('Upload ' + reportFiles + ' there for further investigation.');
 }

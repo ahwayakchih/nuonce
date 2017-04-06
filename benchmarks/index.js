@@ -64,12 +64,10 @@ test.add('nuonce.copied + called', function () {
 // 	return simulateRepeatedCalls(f, args, multiple);
 // });
 
-if (nuonce.proxied) {
-	test.add('nuonce.proxied', function () {
-		var f = nuonce.proxied(prepareTestTarget(props));
-		return simulateRepeatedCalls(f, multiple);
-	});
-}
+test.add('nuonce.proxied', function () {
+	var f = nuonce.proxied(prepareTestTarget(props));
+	return simulateRepeatedCalls(f, multiple);
+});
 
 test.on('start', function () {
 	const times = `${multiple} time` + (multiple === 1 ? '' : 's');
