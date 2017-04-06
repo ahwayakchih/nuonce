@@ -205,7 +205,7 @@ function prepareTestTarget (numberOfProperties) {
 }
 
 /**
- * Call given function multiple times, call its `foo0` method too (if available).
+ * Call given function multiple times, call its `foo` method too (if available).
  *
  * @param {Function} f
  * @param {number}   multiple

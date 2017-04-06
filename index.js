@@ -107,7 +107,8 @@ var _nuonceSource = _nuonce.toString().replace(/^function[^{]*{|}$/g, '');
 // Strip coverage stuff, to prevent test failures
 _nuonceSource = _nuonceSource.replace(/__cov_[^+]+\+\+;/g, '');
 // Prepare it for injecting arguments
-_nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*args\)/, 'fn.call(this, ...args)');
+_nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*arguments\)/, 'fn.call(this, ...args)');
+_nuonceSource = _nuonceSource.replace(/_f\s*\(\)/, '_f (...args)');
 
 /**
  * Creates new variation of _nuonce for specified length of arguments and stores it in `_nuonces`.
@@ -147,9 +148,10 @@ function _nuonce (fn) {
 
 	var r;
 
-	function _f (...args) {
+	function _f () {
 		if (fn) {
-			r = fn.apply(this, args);
+			// This may deoptimize depending on fn. Use `...args` in future, when it's not so much slower than `arguments` for repeated calls.
+			r = fn.apply(this, arguments);
 
 			// Free any references to target function
 			fn = null;
@@ -224,7 +226,6 @@ function _nuonceWithMirroredProperties (fn) {
  * @private
  * @return {external:Proxy}
  */
-/* istanbul ignore next */
 function _nuonceWithProxyES6 (fn) {
 	var r;
 
