@@ -6,12 +6,9 @@ const test = require('tape-catch');
 
 const modes = [
 	'stripped',
-	'copied'
+	'copied',
+	'proxied'
 ];
-
-if (nuonces.proxied) {
-	modes.push('proxied');
-}
 
 modes.map(mode => test('nuonce.' + mode, t => runTests(nuonces[mode], t)));
 
