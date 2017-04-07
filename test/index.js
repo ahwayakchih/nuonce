@@ -13,9 +13,7 @@ if (nuonces.proxied) {
 	modes.push('proxied');
 }
 
-for (var i = 0; i < modes.length; i++) {
-	test('nuonce.' + modes[i] + ' with Proxy API ' + (nuonces.proxied ? '' : 'un') + 'available', runTests.bind(null, nuonces[modes[i]]));
-}
+modes.map(mode => test('nuonce.' + mode, t => runTests(nuonces[mode], t)));
 
 function runTests (nuonce, t) {
 	testIfThrowsOnNonFunction(nuonce, t);
