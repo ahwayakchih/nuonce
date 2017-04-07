@@ -21,6 +21,7 @@ function runTests (nuonce, t) {
 	testIfThrowsOnNonFunction(nuonce, t);
 	testIfNuonceReturnsFunction(nuonce, t);
 	testIfItReturnsSameValue(nuonce, t);
+	testIfThisContextIsRetained(nuonce, t);
 	testIfItCreatesSingleInstanceOfObject(nuonce, t);
 	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
@@ -54,6 +55,17 @@ function testIfNuonceReturnsFunction (nuonce, t) {
 function testIfItReturnsSameValue (nuonce, t) {
 	const testFunction = nuonce(Math.random);
 	t.strictEqual(testFunction(), testFunction(), 'Should return value from wrapped function');
+}
+
+function testIfThisContextIsRetained (nuonce, t) {
+	const ctx = {test: 1};
+	const testFunction = nuonce(function testFunction () {
+		this.added = 'value';
+		return this === ctx;
+	});
+
+	t.ok(testFunction.call(ctx), '`this` value should be passed to target function');
+	t.strictEqual(ctx.added, 'value', 'Context object should have `added` property.');
 }
 
 function testIfItCreatesSingleInstanceOfObject (nuonce, t) {
