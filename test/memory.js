@@ -15,7 +15,6 @@ if (nuonce.proxied) {
 	modes.push('proxied');
 }
 
-// const leak = [];
 function fakeTestOnce (once) {
 	const testFunction = once(Math.random);
 	testFunction();
