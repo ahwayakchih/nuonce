@@ -232,15 +232,15 @@ function _nuonceWithProxyES6 (fn) {
 	return new Proxy(fn, {
 		apply: function (_, ctx, args) {
 			if (fn) {
-				r = fn.apply(ctx, args);
+				r = _.apply(ctx, args);
 				fn = null;
 			}
 
 			return r;
 		},
-		construct: function (ctx, args/* , target*/) {
+		construct: function (_, args, ctx) {
 			if (fn) {
-				r = fn.apply(ctx, args);
+				r = _.apply(ctx, args);
 				fn = null;
 			}
 
