@@ -1,5 +1,6 @@
 /* global gc */
 /* eslint strict: 0 */
+
 'use strict';
 
 const nuonce = require('../index.js');

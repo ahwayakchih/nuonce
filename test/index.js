@@ -1,4 +1,5 @@
 /* eslint strict: 0 */
+
 'use strict';
 
 const nuonces = require('../index.js');
@@ -92,9 +93,7 @@ function testIfOriginalFunctionIsCalledOnlyOnce (nuonce, t) {
 		return Math.random();
 	});
 
-	let testValue = testFunction();
-
-	t.strictEqual(testFunction(), testValue, 'Value returned from second call should be the same');
+	t.strictEqual(testFunction(), testFunction(), 'Value returned from second call should be the same');
 }
 
 function testIfReturnedFunctionHasPropertiesRemoved (nuonce, t) {
