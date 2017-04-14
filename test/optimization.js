@@ -27,10 +27,10 @@ function printStatus(fn) {
 
 function createFn (argc) {
 	let opts = new Array(argc);
-	for (let x = argc; x > 0; x--) {
-		opts.push('a' + x);
+	for (let x = argc; x >= 0; x--) {
+		opts[x] = 'a' + x;
 	}
-	opts.push('return ' + (opts.join(' + ') || '0') + ' + Math.random();');
+	opts.push('return ' + (opts.join(' + ') || '0') + ' + ' + Math.random() + ';');
 	return new Function(...opts);
 }
 
@@ -42,7 +42,7 @@ createFn(1);
 
 var fn;
 for (let i = 0; i < 3000; ++i) {
-	fn = once(createFn(Math.floor(Math.random(4))));
+	fn = once(createFn(Math.floor(Math.random()*5)));
 	for (let j = 0; j < 30; j++) {
 		fn(j);
 	}
