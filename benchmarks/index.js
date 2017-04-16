@@ -18,21 +18,6 @@ const targetsWithProps = {};
 
 const test = benchmark('nuonce');
 
-test.add('once', function () {
-	var f = once(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
-});
-
-test.add('once.js', function () {
-	var f = oncejs(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
-});
-
-test.add('onetime', function () {
-	var f = onetime(prepareTestTarget(props), false);
-	return simulateRepeatedCalls(f, args, multiple);
-});
-
 test.add('nuonce.stripped', function () {
 	var f = nuonce.stripped(prepareTestTarget(props));
 	return simulateRepeatedCalls(f, args, multiple);
@@ -66,6 +51,21 @@ test.add('nuonce.copied + called', function () {
 
 test.add('nuonce.proxied', function () {
 	var f = nuonce.proxied(prepareTestTarget(props));
+	return simulateRepeatedCalls(f, args, multiple);
+});
+
+test.add('once.js', function () {
+	var f = oncejs(prepareTestTarget(props));
+	return simulateRepeatedCalls(f, args, multiple);
+});
+
+test.add('onetime', function () {
+	var f = onetime(prepareTestTarget(props), false);
+	return simulateRepeatedCalls(f, args, multiple);
+});
+
+test.add('once', function () {
+	var f = once(prepareTestTarget(props));
 	return simulateRepeatedCalls(f, args, multiple);
 });
 
