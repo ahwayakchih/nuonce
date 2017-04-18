@@ -222,7 +222,7 @@ function simulateRepeatedCalls (f, args, multiple) {
 	}
 
 	for (i = multiple; i > -1; i--) {
-		result += f.call(this, argv);
+		result += f.apply(this, argv);
 	}
 
 	if (props) {
