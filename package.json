@@ -5,7 +5,9 @@
   "keywords": "once, once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
-    "test": "tape ./test/index.js | ./node_modules/.bin/tap-diff",
+    "test": "npm run -s testSupport && npm run -s testMain",
+    "testMain": "node --allow-natives-syntax ./test/index.js | ./node_modules/.bin/tap-diff",
+    "testSupport": "node --allow-natives-syntax ./test/support.js | ./node_modules/.bin/tap-diff",
     "benchmark": "INFO=1 node $NODE_FLAGS ./benchmarks/index.js",
     "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
     "benchmark1call0props": "CALLS=1 PROPS=0 node $NODE_FLAGS ./benchmarks/index.js",

@@ -5,37 +5,52 @@ const oncejs    = require('once.js/once.min.js');
 const onetime   = require('onetime');
 const os        = require('os');
 const nuonce    = require('../index.js');
+const support   = require('../test/support/fn.js');
 
 if (process.env.INFO) {
-	logInfo();
+	logInfo(['once', 'once.js', 'onetime', '..']);
 }
 
 const args = parseInt(process.env.ARGS || '1', 10);
 const props = parseInt(process.env.PROPS || '0', 10);
 const multiple = parseInt(process.env.CALLS || '1', 10);
 
-const targetsWithProps = {};
-
 const test = benchmark('nuonce');
+const testTarget = support.createFn(args, props);
+
+test.add('once.js', function () {
+	var f = oncejs(testTarget);
+	return support.repeatFn(f, args, multiple);
+});
+
+test.add('onetime', function () {
+	var f = onetime(testTarget, false);
+	return support.repeatFn(f, args, multiple);
+});
+
+test.add('once', function () {
+	var f = once(testTarget);
+	return support.repeatFn(f, args, multiple);
+});
 
 test.add('nuonce.stripped', function () {
-	var f = nuonce.stripped(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
+	var f = nuonce.stripped(testTarget);
+	return support.repeatFn(f, args, multiple);
 });
 
 test.add('nuonce.copied', function () {
-	var f = nuonce.copied(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
+	var f = nuonce.copied(testTarget);
+	return support.repeatFn(f, args, multiple);
 });
 
 test.add('nuonce.copied + called', function () {
-	var t = prepareTestTarget(props);
+	var t = testTarget;
 	var f = nuonce.copied(function () {
 		f.value = t.apply(this, arguments);
 		f.called = true;
 	});
 	f.called = false;
-	return simulateRepeatedCalls(f, args, multiple);
+	return support.repeatFn(f, args, multiple);
 });
 
 /*
@@ -45,28 +60,13 @@ test.add('nuonce.copied + called', function () {
  * Since the only use case for it, is with properties it is practically useless.
  */
 // test.add('nuonce.mirrored', function () {
-// 	var f = nuonce.mirrored(prepareTestTarget(props));
-// 	return simulateRepeatedCalls(f, args, multiple);
+// 	var f = nuonce.mirrored(testTarget);
+// 	return support.repeatFn(f, args, multiple);
 // });
 
 test.add('nuonce.proxied', function () {
-	var f = nuonce.proxied(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
-});
-
-test.add('once.js', function () {
-	var f = oncejs(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
-});
-
-test.add('onetime', function () {
-	var f = onetime(prepareTestTarget(props), false);
-	return simulateRepeatedCalls(f, args, multiple);
-});
-
-test.add('once', function () {
-	var f = once(prepareTestTarget(props));
-	return simulateRepeatedCalls(f, args, multiple);
+	var f = nuonce.proxied(testTarget);
+	return support.repeatFn(f, args, multiple);
 });
 
 test.on('start', function () {
@@ -92,41 +92,32 @@ test.run({
 });
 
 /**
- * Show info about environment and tested packages.
+ * Show info about environment and compared packages.
  *
  * @private
  */
-function logInfo () {
+function logInfo (packages) {
 	console.log(`Running on node ${process.version} with ${os.cpus()[0].model} x ${os.cpus().length}`);
 	console.log('');
 	console.log('Testing:');
 
 	var columns = columnsCreate(['name', 'version', 'homepage']);
 
-	var infoOnce = require('once/package.json');
-	infoOnce.version = 'v' + infoOnce.version;
-	columnsUpdate(columns, infoOnce);
+	var rows = packages.map(name => {
+		var row = require(name + '/package.json');
+		row.version = 'v' + row.version;
+		columnsUpdate(columns, row);
+		return row;
+	});
 
-	var infoOnceJS = require('once.js/package.json');
-	infoOnceJS.version = 'v' + infoOnceJS.version;
-	columnsUpdate(columns, infoOnceJS);
+	rows.forEach(row => {
+		console.log('- ' + columnsText(columns, row));
+	});
 
-	var infoOnetime = require('onetime/package.json');
-	infoOnetime.version = 'v' + infoOnetime.version;
-	columnsUpdate(columns, infoOnetime);
-
-	var infoNuonce = require('../package.json');
-	infoNuonce.version = 'v' + infoNuonce.version;
-	columnsUpdate(columns, infoNuonce);
-
-	console.log('- ' + columnsText(columns, infoOnce));
-	console.log('- ' + columnsText(columns, infoOnceJS));
-	console.log('- ' + columnsText(columns, infoOnetime));
-	console.log('- ' + columnsText(columns, infoNuonce));
 	console.log('');
 
 	function columnsCreate (names) {
-		return names.map(name => {
+		return names.map(function (name) {
 			return {size: 0, source: name};
 		});
 	}
@@ -165,69 +156,4 @@ function logInfo () {
 
 		return value + pad;
 	}
-}
-
-/**
- * Create function to be passed to tested once/nuonce.
- * Create `numberOfProperties` number of properties on it. Each one will be just a reference
- * to `Math.random` function (so it will be callable too).
- *
- * @param {number} numberOfProperties
- * @return {Function}
- */
-function prepareTestTarget (numberOfProperties) {
-	var result = numberOfProperties && targetsWithProps[numberOfProperties];
-
-	if (result) {
-		return result;
-	}
-
-	result = function (...args) {
-		// Return something stupid that cannot be simply optimized to a static value
-		return Math.random() + args.length + numberOfProperties;
-	};
-
-	if (!numberOfProperties) {
-		return result;
-	}
-
-	var key = 'foo';
-	result[key] = () => Math.random();
-
-	for (var i = 1; i < numberOfProperties; i++) {
-		key = 'foo' + (Math.random() % 1);
-		result[key] = () => Math.random();
-	}
-
-	targetsWithProps[numberOfProperties] = result;
-
-	return result;
-}
-
-/**
- * Call given function multiple times, call its `foo` method too (if available).
- *
- * @param {Function} f
- * @param {number}   args
- * @param {number}   multiple
- * @return {boolean}
- */
-function simulateRepeatedCalls (f, args, multiple) {
-	var result;
-
-	var i;
-	var argv = new Array(args);
-	for (i = args - 1; i > -1; i--) {
-		argv[i] = Math.random();
-	}
-
-	for (i = multiple; i > -1; i--) {
-		result += f.apply(this, argv);
-	}
-
-	if (props) {
-		result += f.foo && f.foo();
-	}
-
-	return result;
 }
