@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run -s testSupport && npm run -s testMain",
-    "testMain": "mkdir -p reports && node --allow-natives-syntax --trace-hydrogen --trace_hydrogen_file=./reports/hydra-hydrogen.cfg --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=./reports/hydra-code.asm ./test/index.js | ./node_modules/.bin/tap-diff && echo 'Trace files were created in ./reports/hydra-*.\nYou can use them with http://mrale.ph/irhydra/2/ to check deoptimizations.\n'",
+    "testMain": "mkdir -p reports && node --allow-natives-syntax --trace-hydrogen --trace_hydrogen_file=./reports/hydra-hydrogen.cfg --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=./reports/hydra-code.asm ./test/index.js | ./node_modules/.bin/tap-diff && echo 'Trace files were created in ./reports/hydra-*.\nYou can use them with http://mrale.ph/irhydra/2/ to check for deoptimizations.\n'",
     "testSupport": "node --allow-natives-syntax ./test/support.js | ./node_modules/.bin/tap-diff",
     "benchmark": "INFO=1 node $NODE_FLAGS ./benchmarks/index.js",
     "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
