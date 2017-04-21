@@ -108,7 +108,6 @@ var _nuonceSource = _nuonce.toString().replace(/^function[^{]*{|}$/g, '');
 // Strip coverage stuff, to prevent test failures
 _nuonceSource = _nuonceSource.replace(/__cov_[^+]+\+\+;/g, '');
 // Prepare it for injecting arguments
-// _nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*arguments\)/, 'fn.call(this, ...args)');
 _nuonceSource = _nuonceSource.replace(/_f\s*\(\)/, '_f (...args)');
 
 /**
@@ -125,7 +124,6 @@ function _nuoncesPrepare (length) {
 		args[i] = 'a' + i;
 	}
 
-	// args[length] = '...args';
 	var argv = args.join(', ');
 
 	/* eslint-disable no-new-func */
