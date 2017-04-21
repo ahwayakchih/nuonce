@@ -16,6 +16,7 @@ const OPTIMIZATION = {
 module.exports = {
 	OPTIMIZATION,
 	vmGetOptimizationStatus,
+	vmNeverOptimize,
 	vmOptimizeOnNextCall,
 	vmHasFastProperties
 };
@@ -36,6 +37,15 @@ function vmOptimizeOnNextCall (fn) {
 	}
 
 	return eval('%OptimizeFunctionOnNextCall(fn)');
+}
+
+function vmNeverOptimize (fn) {
+	if (!hasNativeSyntax) {
+		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node tu enable it.');
+		return false;
+	}
+
+	return eval('%NeverOptimizeFunction(fn)');
 }
 
 function vmGetOptimizationStatus (fn) {

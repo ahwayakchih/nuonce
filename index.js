@@ -108,7 +108,7 @@ var _nuonceSource = _nuonce.toString().replace(/^function[^{]*{|}$/g, '');
 // Strip coverage stuff, to prevent test failures
 _nuonceSource = _nuonceSource.replace(/__cov_[^+]+\+\+;/g, '');
 // Prepare it for injecting arguments
-_nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*arguments\)/, 'fn.call(this, ...args)');
+// _nuonceSource = _nuonceSource.replace(/fn\.apply\(this,\s*arguments\)/, 'fn.call(this, ...args)');
 _nuonceSource = _nuonceSource.replace(/_f\s*\(\)/, '_f (...args)');
 
 /**
@@ -119,17 +119,17 @@ _nuonceSource = _nuonceSource.replace(/_f\s*\(\)/, '_f (...args)');
  */
 function _nuoncesPrepare (length) {
 	var src = _nuonceSource;
-	var args = new Array(length + 1);
+	var args = new Array(length);
 
-	for (var i = length - 1; i >= 0; i--) {
+	for (var i = length - 1; i > -1; i--) {
 		args[i] = 'a' + i;
 	}
 
-	args[length] = '...args';
+	// args[length] = '...args';
 	var argv = args.join(', ');
 
 	/* eslint-disable no-new-func */
-	_nuonces[length] = new Function('fn', src.replace('...args', argv).replace('this, ...args', 'this, ' + argv));
+	_nuonces[length] = new Function('fn', src.replace('...args', argv));
 	/* eslint-enable no-new-func */
 
 	return _nuonces[length];
@@ -151,7 +151,7 @@ function _nuonce (fn) {
 
 	function _f () {
 		if (fn) {
-			// This may deoptimize depending on fn. Use `...args` in future, when it's not so much slower than `arguments` for repeated calls.
+			// Use `...args` in future, when it's not so much slower than `arguments`.
 			r = fn.apply(this, arguments);
 
 			// Free any references to target function

@@ -3,6 +3,7 @@
 'use strict';
 
 const nuonces = require('../index.js');
+const support = Object.assign(require('./support/vm.js'), require('./support/fn.js'));
 const test = require('tape-catch');
 
 const modes = [
@@ -10,6 +11,11 @@ const modes = [
 	'copied',
 	'proxied'
 ];
+
+test('nuonce', t => {
+	t.ok(support.vmHasFastProperties(nuonces), 'Should export object with fast properties');
+	t.end();
+});
 
 modes.map(mode => test('nuonce.' + mode, t => runTests(nuonces[mode], t)));
 
@@ -21,6 +27,7 @@ function runTests (nuonce, t) {
 	testIfItCreatesSingleInstanceOfObject(nuonce, t);
 	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
+	testIfItCanBeOptimized(nuonce, t);
 
 	if (nuonce === nuonces.stripped) {
 		testIfReturnedFunctionHasPropertiesRemoved(nuonce, t);
@@ -94,6 +101,15 @@ function testIfOriginalFunctionIsCalledOnlyOnce (nuonce, t) {
 	});
 
 	t.strictEqual(testFunction(), testFunction(), 'Value returned from second call should be the same');
+}
+
+function testIfItCanBeOptimized (nuonce, t) {
+	nuonce(support.createFn(0));
+	nuonce(support.createFn(1));
+	support.vmOptimizeOnNextCall(nuonce);
+	nuonce(support.createFn());
+
+	t.strictEqual(support.vmGetOptimizationStatus(nuonce), support.OPTIMIZATION.OK, 'Should be optimizable');
 }
 
 function testIfReturnedFunctionHasPropertiesRemoved (nuonce, t) {

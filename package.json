@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "test": "npm run -s testSupport && npm run -s testMain",
-    "testMain": "node --allow-natives-syntax ./test/index.js | ./node_modules/.bin/tap-diff",
+    "testMain": "mkdir -p reports && node --allow-natives-syntax --trace-hydrogen --trace_hydrogen_file=./reports/hydra-hydrogen.cfg --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=./reports/hydra-code.asm ./test/index.js | ./node_modules/.bin/tap-diff && echo 'Trace files were created in ./reports/hydra-*.\nYou can use them with http://mrale.ph/irhydra/2/ to check deoptimizations.\n'",
     "testSupport": "node --allow-natives-syntax ./test/support.js | ./node_modules/.bin/tap-diff",
     "benchmark": "INFO=1 node $NODE_FLAGS ./benchmarks/index.js",
     "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
@@ -18,8 +18,7 @@
     "benchmarksWithoutGC": "NODE_FLAGS='--max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping' npm run -s benchmarks",
     "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
     "checkCoverage": "node ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- ./test/index.js > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)",
-    "checkMemory": "mkdir -p reports && node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'",
-    "checkOptimization": "mkdir -p reports && node --trace-hydrogen --trace_hydrogen_file=./reports/hydra-hydrogen.cfg --trace-phase=Z --trace-deopt --code-comments --hydrogen-track-positions --redirect-code-traces --redirect-code-traces-to=./reports/hydra-code.asm --allow-natives-syntax ./test/optimization.js"
+    "checkMemory": "mkdir -p reports && node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
   },
   "engines": {
     "node": ">=6.9"
