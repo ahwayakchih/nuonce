@@ -27,6 +27,7 @@ function runTests (nuonce, t) {
 	testIfItCreatesSingleInstanceOfObject(nuonce, t);
 	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
+	testIfItCallsBackAfterFirstCall(nuonce, t);
 	testIfItCanBeOptimized(nuonce, t);
 
 	if (nuonce === nuonces.stripped) {
@@ -41,6 +42,7 @@ function runTests (nuonce, t) {
 
 function testIfThrowsOnNonFunction (nuonce, t) {
 	t.throws(nuonce, 'Should throw error when called for non-function');
+	t.throws(() => nuonce(() => 1, true), 'Should throw error when callback is not a function');
 }
 
 function testIfNuonceReturnsFunction (nuonce, t) {
@@ -76,7 +78,7 @@ function testIfItCreatesSingleInstanceOfObject (nuonce, t) {
 		this.title = 'test';
 		return this;
 	});
-	t.strictEqual(new TestConstructor(), new TestConstructor(), 'Should return the same instance of object');
+	t.strictEqual(new TestConstructor(), new TestConstructor(), 'Should return the same instance of an object');
 }
 
 function testIfItPassessAllArguments (nuonce, t) {
@@ -93,14 +95,28 @@ function testIfItPassessAllArguments (nuonce, t) {
 }
 
 function testIfOriginalFunctionIsCalledOnlyOnce (nuonce, t) {
-	let wasCalled = false;
+	let wasCalled = 0;
 	const testFunction = nuonce(() => {
-		t.strictEqual(wasCalled, false, 'testFunction should be called just once');
-		wasCalled = true;
-		return Math.random();
+		t.strictEqual(wasCalled, 0, 'testFunction should be called just once');
+		wasCalled++;
+		return wasCalled;
 	});
 
 	t.strictEqual(testFunction(), testFunction(), 'Value returned from second call should be the same');
+	t.strictEqual(wasCalled, 1, 'Should call testFunction once');
+}
+
+function testIfItCallsBackAfterFirstCall (nuonce, t) {
+	let wasCalled = 0;
+	let i = 0;
+	const testFunction = nuonce(() => ++i, value => {
+		t.strictEqual(value, 1, 'Should pass returned value to the callback function');
+		wasCalled++;
+		return wasCalled;
+	});
+
+	t.strictEqual(testFunction(), testFunction(), 'Value returned from second call should be the same');
+	t.strictEqual(wasCalled, 1, 'Should call back exactly once');
 }
 
 function testIfItCanBeOptimized (nuonce, t) {
@@ -120,7 +136,7 @@ function testIfReturnedFunctionHasPropertiesRemoved (nuonce, t) {
 	};
 	testFunction.customProperty = Math.random();
 
-	t.strictEqual(nuonce(testFunction, true).length, 0, 'Returned function should `length` equal zero');
+	t.strictEqual(nuonce(testFunction).length, 0, 'Returned function should `length` equal zero');
 	t.strictEqual(typeof nuonce(testFunction).customProperty, 'undefined', 'Returned value should not have custom properties');
 }
 
@@ -132,6 +148,6 @@ function testIfReturnedFunctionHasSameProperties (nuonce, t) {
 	};
 	testFunction.customProperty = Math.random();
 
-	t.strictEqual(nuonce(testFunction, true).length, testFunction.length, 'Returned function should have the same `length` as target function');
+	t.strictEqual(nuonce(testFunction).length, testFunction.length, 'Returned function should have the same `length` as target function');
 	t.strictEqual(nuonce(testFunction).customProperty, testFunction.customProperty, 'Returned value should have the same custom properties');
 }

@@ -44,12 +44,12 @@ test.add('nuonce.copied', function () {
 });
 
 test.add('nuonce.copied + called', function () {
-	var t = testTarget;
-	var f = nuonce.copied(function () {
-		f.value = t.apply(this, arguments);
+	var f = nuonce.copied(testTarget, function (r) {
+		f.value = r;
 		f.called = true;
 	});
 	f.called = false;
+	f.value = undefined;
 	return support.repeatFn(f, args, multiple);
 });
 
