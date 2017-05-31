@@ -2,7 +2,7 @@
   "name": "nuonce",
   "version": "1.1.0",
   "description": "Nuanced implementation of 'once' functionality, optimized for node.js",
-  "keywords": "once, once, single, function, call, run, node",
+  "keywords": "once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
     "test": "npm run -s testSupport && npm run -s testMain",
