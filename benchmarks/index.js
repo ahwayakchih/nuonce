@@ -114,8 +114,6 @@ function logInfo (packages) {
 		console.log('- ' + columnsText(columns, row));
 	});
 
-	console.log('');
-
 	function columnsCreate (names) {
 		return names.map(function (name) {
 			return {size: 0, source: name};
