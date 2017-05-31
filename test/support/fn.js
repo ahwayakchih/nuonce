@@ -28,7 +28,8 @@ function createFn (argc, propc, makeItUnoptimizable) {
 	if (makeItUnoptimizable) {
 		// According to https://github.com/petkaantonov/bluebird/wiki/Optimization-killers#2-unsupported-syntax
 		// using `debugger` in code, even if that code will never be executed, makes the function unoptimizable.
-		code = 'if (false) { debugger; }\n';
+		// But that stopped to be true with Node 8, so we go back to using non-existing `argments`.
+		code = 'arguments[arguments.length + 1];\n';
 	}
 
 	opts.push(code);

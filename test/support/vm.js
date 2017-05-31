@@ -3,6 +3,19 @@
 'use strict';
 
 /* eslint-disable no-magic-numbers */
+// These bits must be in sync with bits defined in Runtime_GetOptimizationStatus
+// From: https://github.com/v8/v8/blob/master/test/mjsunit/mjsunit.js
+const V8OptimizationStatus = {
+	kIsFunction    : 1 << 0,
+	kNeverOptimize : 1 << 1,
+	kAlwaysOptimize: 1 << 2,
+	kMaybeDeopted  : 1 << 3,
+	kOptimized     : 1 << 4,
+	kTurboFanned   : 1 << 5,
+	kInterpreted   : 1 << 6
+};
+
+/* eslint-disable no-magic-numbers */
 const OPTIMIZATION = {
 	OK           : 1,
 	NONE         : 2,
@@ -32,7 +45,7 @@ const hasNativeSyntax = process.execArgv.reduce((result, value) => {
 /* eslint-disable no-eval, no-unused-vars */
 function vmOptimizeOnNextCall (fn) {
 	if (!hasNativeSyntax) {
-		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node tu enable it.');
+		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node to enable it.');
 		return false;
 	}
 
@@ -41,7 +54,7 @@ function vmOptimizeOnNextCall (fn) {
 
 function vmNeverOptimize (fn) {
 	if (!hasNativeSyntax) {
-		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node tu enable it.');
+		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node to enable it.');
 		return false;
 	}
 
@@ -50,16 +63,42 @@ function vmNeverOptimize (fn) {
 
 function vmGetOptimizationStatus (fn) {
 	if (!hasNativeSyntax) {
-		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node tu enable it.');
+		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node to enable it.');
 		return false;
 	}
 
-	return eval('%GetOptimizationStatus(fn)');
+	const result = eval('%GetOptimizationStatus(fn)');
+	if (Number(process.version.split('.')[0].replace('v', '')) < 8) {
+		return result;
+	}
+
+	// if ((result & V8OptimizationStatus.kNeverOptimize) === 0) {
+	// 	return OPTIMIZATION.NEVER;
+	// }
+
+	if ((result & V8OptimizationStatus.kIsFunction) === 0) {
+		// Not a function
+		return OPTIMIZATION.NONE;
+	}
+
+	if (result & V8OptimizationStatus.kMaybeDeopted) {
+		return OPTIMIZATION.DEOPTIMIZABLE;
+	}
+
+	if ((result & V8OptimizationStatus.kOptimized) && (result & V8OptimizationStatus.kTurboFanned)) {
+		return OPTIMIZATION.TURBO;
+	}
+
+	if (result & V8OptimizationStatus.kOptimized) {
+		return OPTIMIZATION.OK;
+	}
+
+	return OPTIMIZATION.NONE;
 }
 
 function vmHasFastProperties (obj) {
 	if (!hasNativeSyntax) {
-		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node tu enable it.');
+		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node to enable it.');
 		return false;
 	}
 
