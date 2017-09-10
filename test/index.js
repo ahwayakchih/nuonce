@@ -29,6 +29,7 @@ function runTests (nuonce, t) {
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
 	testIfItCallsBackAfterFirstCall(nuonce, t);
 	testIfItCanBeOptimized(nuonce, t);
+	testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable(nuonce, t);
 
 	if (nuonce === nuonces.stripped) {
 		testIfReturnedFunctionHasPropertiesRemoved(nuonce, t);
@@ -128,6 +129,21 @@ function testIfItCanBeOptimized (nuonce, t) {
 	const status = support.vmGetOptimizationStatus(nuonce);
 	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
 	t.ok(status, 'Should be optimizable');
+}
+
+function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
+	nuonce(support.createFn(0, null, true));
+	nuonce(support.createFn(1, {foo: 1}, true));
+
+	const target = support.createFn(2, null, true);
+	t.strictEqual(support.vmGetOptimizationStatus(target), support.OPTIMIZATION.NONE, 'Target function should be unoptimizable');
+
+	support.vmOptimizeOnNextCall(nuonce);
+	nuonce(target);
+
+	const status = support.vmGetOptimizationStatus(nuonce);
+	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
+	t.ok(status, 'Should be optimizable even when target function is unoptimizable');
 }
 
 function testIfReturnedFunctionHasPropertiesRemoved (nuonce, t) {
