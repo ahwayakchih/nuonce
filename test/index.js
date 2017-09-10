@@ -122,7 +122,7 @@ function testIfItCallsBackAfterFirstCall (nuonce, t) {
 
 function testIfItCanBeOptimized (nuonce, t) {
 	nuonce(support.createFn(0));
-	nuonce(support.createFn(1));
+	nuonce(support.createFn(2, {foo: 1}));
 	support.vmOptimizeOnNextCall(nuonce);
 	nuonce(support.createFn());
 
@@ -132,6 +132,9 @@ function testIfItCanBeOptimized (nuonce, t) {
 }
 
 function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
+	support.vmDeoptimize(nuonce);
+	t.strictEqual(support.vmGetOptimizationStatus(nuonce), support.OPTIMIZATION.NONE, 'Should be unoptimized at start of test');
+
 	nuonce(support.createFn(0, null, true));
 	nuonce(support.createFn(1, {foo: 1}, true));
 
