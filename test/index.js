@@ -12,6 +12,10 @@ const modes = [
 	'proxied'
 ];
 
+const NO_ARGS = 0;
+const ONE_ARG = 1;
+const TWO_ARGS = 2;
+
 test('nuonce', t => {
 	t.ok(support.vmHasFastProperties(nuonces), 'Should export object with fast properties');
 	t.end();
@@ -121,24 +125,26 @@ function testIfItCallsBackAfterFirstCall (nuonce, t) {
 }
 
 function testIfItCanBeOptimized (nuonce, t) {
-	nuonce(support.createFn(0));
-	nuonce(support.createFn(2, {foo: 1}));
+	nuonce(support.createFn(NO_ARGS));
+	nuonce(support.createFn(TWO_ARGS, {foo: 1}));
 	support.vmOptimizeOnNextCall(nuonce);
-	nuonce(support.createFn());
+	nuonce(support.createFn(ONE_ARG));
 
 	const status = support.vmGetOptimizationStatus(nuonce);
 	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
-	t.ok(status, 'Should be optimizable');
+	t.ok(optimized, 'Should be optimizable');
 }
 
 function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
+	// This may output deoptimization info, especially if run after `testIfItCanBeOptimized`,
+	// where we optimize code :/.
 	support.vmDeoptimize(nuonce);
 	t.strictEqual(support.vmGetOptimizationStatus(nuonce), support.OPTIMIZATION.NONE, 'Should be unoptimized at start of test');
 
-	nuonce(support.createFn(0, null, true));
-	nuonce(support.createFn(1, {foo: 1}, true));
+	nuonce(support.createFn(NO_ARGS, null, true));
+	nuonce(support.createFn(ONE_ARG, {foo: 1}, true));
 
-	const target = support.createFn(2, null, true);
+	const target = support.createFn(TWO_ARGS, null, true);
 	t.strictEqual(support.vmGetOptimizationStatus(target), support.OPTIMIZATION.NONE, 'Target function should be unoptimizable');
 
 	support.vmOptimizeOnNextCall(nuonce);
@@ -146,7 +152,7 @@ function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
 
 	const status = support.vmGetOptimizationStatus(nuonce);
 	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
-	t.ok(status, 'Should be optimizable even when target function is unoptimizable');
+	t.ok(optimized, 'Should be optimizable even when target function is unoptimizable');
 }
 
 function testIfReturnedFunctionHasPropertiesRemoved (nuonce, t) {

@@ -68,6 +68,7 @@ function vmDeoptimize (fn) {
 		return false;
 	}
 
+	process.stdout.write('[deoptimizing on purpose]\n');
 	return eval('%DeoptimizeFunction(fn)');
 }
 
