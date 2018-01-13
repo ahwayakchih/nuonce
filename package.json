@@ -27,7 +27,7 @@
     "beautify-benchmark": "git+https://github.com/ahwayakchih/beautify-benchmark.git",
     "benchmark": "^2.1.4",
     "docdash": "^0.4.0",
-    "eslint": "^4.14.0",
+    "eslint": "^4.15.0",
     "heapdump": "^0.3.9",
     "istanbul": "^0.4.4",
     "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
