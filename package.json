@@ -36,7 +36,7 @@
     "onetime": "^2.0.1",
     "opener": "^1.4.3",
     "tap-diff": "^0.1.1",
-    "tape": "^4.8.0",
+    "tape": "^4.9.0",
     "tape-catch": "^1.0.6"
   },
   "homepage": "https://github.com/ahwayakchih/nuonce",
