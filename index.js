@@ -116,6 +116,7 @@ _nuonceSource = _nuonceSource.replace(/_f\s*\(\)/, '_f (...args)');
  * Creates a new variation of `_nuonce` for specified length of arguments and stores it in `_nuonces` cache.
  *
  * @private
+ * @param {Number} length
  * @return {Function}
  */
 function _nuoncesPrepare (length) {
@@ -140,6 +141,8 @@ function _nuoncesPrepare (length) {
  * Every next time it is called, it will simply return the first result, without calling the target function ever again.
  *
  * @private
+ * @param {Function} fn
+ * @param {Function} [cb]   call back once with result, right after first call
  * @return {Function}
  */
 function _nuonce (fn, cb) {
@@ -153,6 +156,10 @@ function _nuonce (fn, cb) {
 
 	var r;
 
+	/**
+	 * @private
+	 * @return {any} whatever was returned by cb
+	 */
 	function _f () {
 		if (fn) {
 			// Use `...args` in future, when it's not so much slower than `arguments`.
@@ -177,6 +184,8 @@ function _nuonce (fn, cb) {
  * Creates a `_nuonce` and adds copies of enumerable properties from the target function.
  *
  * @private
+ * @param {Function} fn
+ * @param {Function} [cb]   call back once with result, right after first call
  * @return {Function}
  */
 function _nuonceWithCopiedProperties (fn, cb) {
@@ -193,13 +202,15 @@ function _nuonceWithCopiedProperties (fn, cb) {
 	return f;
 }
 
+/* istanbul ignore next */
 /**
  * Creates a `_nuonce` and sets up setters and getters on it, one for each of the target function's enumerable properties.
  *
  * @private
+ * @param {Function} fn
+ * @param {Function} [cb]   call back once with result, right after first call
  * @return {Function}
  */
-/* istanbul ignore next */
 function _nuonceWithMirroredProperties (fn, cb) {
 	var l = fn.length;
 	var f = (_nuonces[l] || _nuoncesPrepare(l))(fn, cb);
@@ -234,6 +245,8 @@ function _nuonceWithMirroredProperties (fn, cb) {
  * Creates a Proxy (ES6) function pointing to a target function.
  *
  * @private
+ * @param {Function} fn
+ * @param {Function} [cb]   call back once with result, right after first call
  * @return {external:Proxy}
  */
 function _nuonceWithProxyES6 (fn, cb) {
