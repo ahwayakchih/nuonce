@@ -5,7 +5,7 @@
   "keywords": "once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
-    "test": "mkdir -p reports && node --allow-natives-syntax --trace-deopt --code-comments ./test/index.js | ./node_modules/.bin/tap-diff",
+    "test": "node --allow-natives-syntax --trace-deopt --code-comments ./test/index.js | ./node_modules/.bin/tap-diff",
     "benchmark": "DOCKER=$(grep ':/docker/' /proc/1/cgroup) INFO=1 node $NODE_FLAGS ./benchmarks/index.js",
     "benchmarks": "(DOCKER=$(grep ':/docker/' /proc/1/cgroup) INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
     "benchmark1call0props": "CALLS=1 PROPS=0 node $NODE_FLAGS ./benchmarks/index.js",
@@ -16,7 +16,7 @@
     "benchmarksWithoutGC": "NODE_FLAGS='--max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping' npm run -s benchmarks",
     "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
     "checkCoverage": "node --allow-natives-syntax ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- ./test/index.js > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)",
-    "checkMemory": "mkdir -p reports && node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
+    "checkMemory": "node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
   },
   "engines": {
     "node": ">=6.9"
