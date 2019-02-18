@@ -97,7 +97,8 @@ test.run({
  * @private
  */
 function logInfo (packages) {
-	console.log(`Running on node ${process.version} with ${os.cpus()[0].model} x ${os.cpus().length}`);
+	var where = process.env.DOCKER ? 'inside Docker' : 'natively';
+	console.log(`Running ${where} with Node ${process.version} and ${os.cpus()[0].model} x ${os.cpus().length}`);
 	console.log('');
 	console.log('Testing:');
 

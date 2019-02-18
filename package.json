@@ -6,8 +6,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mkdir -p reports && node --allow-natives-syntax --trace-deopt --code-comments ./test/index.js | ./node_modules/.bin/tap-diff",
-    "benchmark": "INFO=1 node $NODE_FLAGS ./benchmarks/index.js",
-    "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
+    "benchmark": "DOCKER=$(grep ':/docker/' /proc/1/cgroup) INFO=1 node $NODE_FLAGS ./benchmarks/index.js",
+    "benchmarks": "(DOCKER=$(grep ':/docker/' /proc/1/cgroup) INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt && (./node_modules/.bin/opener ./reports/benchmarks.txt &)",
     "benchmark1call0props": "CALLS=1 PROPS=0 node $NODE_FLAGS ./benchmarks/index.js",
     "benchmark1call3props": "CALLS=1 PROPS=3 node $NODE_FLAGS ./benchmarks/index.js",
     "benchmark50calls0props": "CALLS=50 PROPS=0 node $NODE_FLAGS ./benchmarks/index.js",
