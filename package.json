@@ -31,7 +31,7 @@
     "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
     "once": "^1.4.0",
     "once.js": "git+https://github.com/daniellmb/once.js.git",
-    "onetime": "^2.0.1",
+    "onetime": "^3.0.0",
     "opener": "^1.4.3",
     "tap-diff": "^0.1.1",
     "tape": "^4.9.0",
