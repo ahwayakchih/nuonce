@@ -15,6 +15,7 @@
     "benchmarkWithoutGC": "NODE_FLAGS='--max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping' npm run -s benchmark",
     "benchmarksWithoutGC": "NODE_FLAGS='--max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping' npm run -s benchmarks",
     "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
+    "checkStyle": "eslint index.js > ./reports/eslint.txt",
     "checkCoverage": "rm -rf ./reports/coverage && c8 --clean --report --reporter text --reporter html --reports-dir reports/coverage node --allow-natives-syntax ./test/index.js && mv ./coverage ./reports/coverage && (./node_modules/.bin/opener ./reports/coverage/index.html &)",
     "checkMemory": "node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
   },
