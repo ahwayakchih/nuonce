@@ -85,8 +85,6 @@ var _nuonces = [
  */
 var _nuonceSource = _nuonce.toString().replace(/^function[^{]*{|}$/g, '');
 
-// Strip coverage stuff, to prevent test failures
-_nuonceSource = _nuonceSource.replace(/__cov_[^+]+\+\+;/g, '');
 // Prepare it for injecting arguments
 _nuonceSource = _nuonceSource.replace(/_f\s*\(\)/, '_f (...args)');
 
