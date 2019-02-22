@@ -20,8 +20,8 @@ module.exports = {
 	 * Returns a function that will call the `fn` function just once.
 	 * Every next time the returned function is called, it will return value from the first call.
 	 *
-	 * The returned function does not keep properties or `length` of target function, so if
-	 * callers depend on its decorations and/or specific `length`, use the `{@link module:nuonce.copied}` method instead.
+	 * The returned function does not keep properties or `length` of target function. If you need
+	 * its decorations and/or specific `length`, use the `{@link module:nuonce.copied}` method instead.
 	 *
 	 * @function
 	 * @param {Function} fn
@@ -34,8 +34,8 @@ module.exports = {
 	 * Returns a function that will call the `fn` function just once.
 	 * Every next time the returned function is called, it will return value from the first call.
 	 *
-	 * The returned function has enumerable properties and `length` (number of declared arguments)
-	 * copied from the target function.
+	 * The returned function has a copy of all enumerable properties and keeps `length`
+	 * (number of declared arguments) of target function.
 	 *
 	 * @function
 	 * @param {Function} fn
