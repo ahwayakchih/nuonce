@@ -45,28 +45,6 @@ module.exports = {
 	copied: _nuonceWithCopiedProperties,
 
 	/**
-	 * Returns a function that will call the `fn` function just once.
-	 * Every next time the returned function is called, it will return value from the first call.
-	 *
-	 * The returned function has `length` (number of declared arguments) copied from the target function.
-	 * Enumerable properties of the target function are semi-proxied through the returned function by
-	 * setting up setters and getters for each of them.
-	 * That allows callers to get updated property values of the target function even after it was "nuonced",
-	 * but still does not allow to get new properties added at a later time, unlike with a full Proxy object.
-	 *
-	 * This method is marked as private, because it's pretty useless:
-	 * - it has performs "ok" only when there are no properties to "mirror"
-	 * - it is A LOT slower than full Proxy object when there are properties to "mirror"
-	 *
-	 * @private
-	 * @function
-	 * @param {Function} fn
-	 * @param {Function} [cb]   call back once with result, right after first call
-	 * @return {Function}
-	 */
-	mirrored: _nuonceWithMirroredProperties,
-
-	/**
 	 * Returns a callable Proxy object that will call the `fn` function just once.
 	 * Every next time the returned object is called, it will return value from the first call.
 	 *
@@ -197,45 +175,6 @@ function _nuonceWithCopiedProperties (fn, cb) {
 	for (var i = 0, imax = keys.length; i < imax; i++) {
 		k = keys[i];
 		f[k] = fn[k];
-	}
-
-	return f;
-}
-
-/* istanbul ignore next */
-/**
- * Creates a `_nuonce` and sets up setters and getters on it, one for each of the target function's enumerable properties.
- *
- * @private
- * @param {Function} fn
- * @param {Function} [cb]   call back once with result, right after first call
- * @return {Function}
- */
-function _nuonceWithMirroredProperties (fn, cb) {
-	var l = fn.length;
-	var f = (_nuonces[l] || _nuoncesPrepare(l))(fn, cb);
-
-	var getter = function (name) {
-		return this[name];
-	};
-	var setter = function (name, value) {
-		this[name] = value;
-	};
-
-	var keys = Object.keys(fn);
-	var k;
-	var o;
-	for (var i = 0, imax = keys.length; i < imax; i++) {
-		k = keys[i];
-
-		// Following makes f into semi-proxy, but also makes this whole thing A LOT slower, even slower than full Proxy
-		o = (Object.getPropertyDescriptor || Object.getOwnPropertyDescriptor)(fn, k);
-		Object.defineProperty(f, k, {
-			enumerable  : o.enumerable,
-			configurable: o.configurable,
-			get         : getter.bind(fn, k),
-			set         : setter.bind(fn, k)
-		});
 	}
 
 	return f;
