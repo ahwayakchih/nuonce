@@ -15,7 +15,7 @@
     "benchmarkWithoutGC": "NODE_FLAGS='--max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping' npm run -s benchmark",
     "benchmarksWithoutGC": "NODE_FLAGS='--max-old-space-size=1000 --max-semi-space-size=512 --noconcurrent_sweeping' npm run -s benchmarks",
     "doc": "./node_modules/.bin/jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js && (./node_modules/.bin/opener ./reports/jsdoc/index.html &)",
-    "checkCoverage": "node --allow-natives-syntax ./node_modules/.bin/istanbul cover --dir reports/coverage ./node_modules/.bin/tape -- ./test/index.js > /dev/null && (./node_modules/.bin/opener ./reports/coverage/lcov-report/index.html &)",
+    "checkCoverage": "rm -rf ./reports/coverage && c8 --clean --report --reporter text --reporter html --reports-dir reports/coverage node --allow-natives-syntax ./test/index.js && mv ./coverage ./reports/coverage && (./node_modules/.bin/opener ./reports/coverage/index.html &)",
     "checkMemory": "node --expose-gc ./test/memory.js && echo 'heapsnapshots created in ./reports directory'"
   },
   "engines": {
@@ -24,10 +24,10 @@
   "devDependencies": {
     "beautify-benchmark": "git+https://github.com/ahwayakchih/beautify-benchmark.git",
     "benchmark": "^2.1.4",
+    "c8": "^3.3.0",
     "docdash": "^1.0.3",
     "eslint": "^5.14.1",
     "heapdump": "^0.3.12",
-    "istanbul": "^0.4.4",
     "jsdoc": "git+https://github.com/jsdoc3/jsdoc.git",
     "once": "^1.4.0",
     "once.js": "git+https://github.com/daniellmb/once.js.git",
