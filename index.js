@@ -269,9 +269,9 @@ function _nuonceWithProxyES6 (fn, cb) {
 
 			return r;
 		},
-		construct: function (_, args, ctx) {
+		construct: function (_, args) {
 			if (fn) {
-				r = _.apply(ctx, args);
+				r = new _(...args);
 				fn = null;
 				if (cb) {
 					cb(r);

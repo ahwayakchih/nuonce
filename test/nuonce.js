@@ -32,6 +32,9 @@ function runTests (nuonce, t) {
 	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
 	testIfItCallsBackAfterFirstCall(nuonce, t);
+	if (nuonce === nuonces.proxied) {
+		testIfItCallsBackAfterFirstCallWhenProxied(nuonce, t);
+	}
 	testIfItCanBeOptimized(nuonce, t);
 	testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable(nuonce, t);
 
@@ -122,6 +125,20 @@ function testIfItCallsBackAfterFirstCall (nuonce, t) {
 
 	t.strictEqual(testFunction(), testFunction(), 'Value returned from second call should be the same');
 	t.strictEqual(wasCalled, 1, 'Should call back exactly once');
+}
+
+function testIfItCallsBackAfterFirstCallWhenProxied (nuonce, t) {
+	let wasCalled = 0;
+	let i = 0;
+	const creator = function () { this.value = ++i; };
+	const testFunction = nuonce(creator, value => {
+		t.strictEqual(value.value, 1, '`new nuonced` should pass returned value to the callback function');
+		wasCalled++;
+		return wasCalled;
+	});
+
+	t.strictEqual(new testFunction(), new testFunction(), '`new nuonced` should return the same instance of an object');
+	t.strictEqual(wasCalled, 1, '`new nuonced` should call back exactly once');
 }
 
 function testIfItCanBeOptimized (nuonce, t) {
