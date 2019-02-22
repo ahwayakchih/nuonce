@@ -53,17 +53,6 @@ test.add('nuonce.copied + called', function () {
 	return support.repeatFn(f, args, multiple);
 });
 
-/*
- * Disable `mirrored` because it is useless:
- * it's speed is ok only without custom properties,
- * otherwise it is horribly slow (even just one custom property)...
- * Since the only use case for it, is with properties it is practically useless.
- */
-// test.add('nuonce.mirrored', function () {
-// 	var f = nuonce.mirrored(testTarget);
-// 	return support.repeatFn(f, args, multiple);
-// });
-
 test.add('nuonce.proxied', function () {
 	var f = nuonce.proxied(testTarget);
 	return support.repeatFn(f, args, multiple);
