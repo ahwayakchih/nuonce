@@ -43,7 +43,6 @@
     "once": "^1.4.0",
     "once.js": "daniellmb/once.js",
     "onetime": "^3.0.0",
-    "opener": "^1.5.1",
     "tap-diff": "^0.1.1",
     "tape": "^4.10.1",
     "tape-catch": "^1.0.6"
