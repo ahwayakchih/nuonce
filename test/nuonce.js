@@ -8,6 +8,7 @@ const test = require('tape-catch');
 
 const modes = [
 	'stripped',
+	'observable',
 	'copied',
 	'proxied'
 ];
@@ -31,25 +32,34 @@ function runTests (nuonce, t) {
 	testIfItCreatesSingleInstanceOfObject(nuonce, t);
 	testIfItPassessAllArguments(nuonce, t);
 	testIfOriginalFunctionIsCalledOnlyOnce(nuonce, t);
-	testIfItCallsBackAfterFirstCall(nuonce, t);
-	if (nuonce === nuonces.proxied) {
-		testIfItCallsBackAfterFirstCallWhenProxied(nuonce, t);
-	}
-	testIfItCanBeOptimized(nuonce, t);
-	testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable(nuonce, t);
 
-	if (nuonce === nuonces.stripped) {
+	if (nuonce !== nuonces.stripped) {		
+		testIfThrowsOnNonFunctionCallback(nuonce, t);
+		testIfItCallsBackAfterEveryCall(nuonce, t);
+	}
+
+	if (nuonce === nuonces.proxied) {
+		testIfItCallsBackAfterEveryCallWhenProxied(nuonce, t);
+	}
+
+	if (nuonce === nuonces.stripped || nuonce === nuonces.observable) {
 		testIfReturnedFunctionHasPropertiesRemoved(nuonce, t);
 	}
 	else {
 		testIfReturnedFunctionHasSameProperties(nuonce, t);
 	}
 
+	testIfItCanBeOptimized(nuonce, t);
+	testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable(nuonce, t);
+
 	t.end();
 }
 
 function testIfThrowsOnNonFunction (nuonce, t) {
-	t.throws(nuonce, 'Should throw error when called for non-function');
+	t.throws(() => nuonce({}), 'Should throw error when called for non-function');
+}
+
+function testIfThrowsOnNonFunctionCallback (nuonce, t) {
 	t.throws(() => nuonce(() => 1, true), 'Should throw error when callback is not a function');
 }
 
@@ -114,31 +124,41 @@ function testIfOriginalFunctionIsCalledOnlyOnce (nuonce, t) {
 	t.strictEqual(wasCalled, 1, 'Should call testFunction once');
 }
 
-function testIfItCallsBackAfterFirstCall (nuonce, t) {
+function testIfItCallsBackAfterEveryCall (nuonce, t) {
 	let wasCalled = 0;
 	let i = 0;
-	const testFunction = nuonce(() => ++i, value => {
-		t.strictEqual(value, 1, 'Should pass returned value to the callback function');
-		wasCalled++;
-		return wasCalled;
+	const testFunction = nuonce(() => ++i, status => {
+		t.strictEqual(status.value, i, 'Should pass returned value to the callback function');
+		wasCalled = status.calls;
+		return status.value;
 	});
 
 	t.strictEqual(testFunction(), testFunction(), 'Value returned from second call should be the same');
-	t.strictEqual(wasCalled, 1, 'Should call back exactly once');
+	t.strictEqual(wasCalled, 2, 'Should call back each time target is called');
+
+	wasCalled = 0;
+	const testFunction2 = nuonce(first => ++i, status => {
+		t.strictEqual(status.value, i, 'Should pass returned value to the callback function');
+		wasCalled = status.calls;
+		return status.value;
+	});
+
+	t.strictEqual(testFunction2('dummy1'), testFunction2('dummy2'), 'Value returned from second call should be the same');
+	t.strictEqual(wasCalled, 2, 'Should call back each time target is called');
 }
 
-function testIfItCallsBackAfterFirstCallWhenProxied (nuonce, t) {
+function testIfItCallsBackAfterEveryCallWhenProxied (nuonce, t) {
 	let wasCalled = 0;
 	let i = 0;
-	const creator = function () { this.value = ++i; };
-	const testFunction = nuonce(creator, value => {
-		t.strictEqual(value.value, 1, '`new nuonced` should pass returned value to the callback function');
-		wasCalled++;
-		return wasCalled;
+	const creator = function () { this.id = ++i; };
+	const testFunction = nuonce(creator, status => {
+		t.strictEqual(status.value.id, i, '`new nuonced` should pass returned value to the callback function');
+		wasCalled = status.calls;
+		return status.value;
 	});
 
 	t.strictEqual(new testFunction(), new testFunction(), '`new nuonced` should return the same instance of an object');
-	t.strictEqual(wasCalled, 1, '`new nuonced` should call back exactly once');
+	t.strictEqual(wasCalled, 2, '`new nuonced` should call back each time target is called');
 }
 
 function testIfItCanBeOptimized (nuonce, t) {

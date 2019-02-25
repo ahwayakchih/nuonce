@@ -1,6 +1,6 @@
 {
   "name": "nuonce",
-  "version": "1.1.2",
+  "version": "2.0.0",
   "description": "Nuanced implementation of 'once' functionality, optimized for node.js",
   "keywords": "once, single, function, call, run, node",
   "main": "index.js",
@@ -15,7 +15,7 @@
     "benchmark50calls3props": "CALLS=50 PROPS=3 node --expose-gc $NODE_FLAGS ./benchmarks/index.js",
     "postbenchmarks": "cat ./reports/benchmarks.txt && echo '' && echo 'Benchmark results saved to `reports/benchmarks.txt`'",
     "predoc": "rm -rf ./reports/jsdoc",
-    "doc": "jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md -r index.js",
+    "doc": "jsdoc -d reports/jsdoc -c tools/jsdoc.json --readme README.md *.js",
     "postdoc": "echo 'Documentation available at `reports/jsdoc/index.html`'",
     "precheckStyle": "rm ./reports/eslint.txt",
     "checkStyle": "eslint index.js > ./reports/eslint.txt",
@@ -55,5 +55,5 @@
     "type": "git",
     "url": "git://github.com/ahwayakchih/nuonce.git"
   },
-  "tonicExample": "const nuonce = require('nuonce');\nconst once = nuonce.stripped;"
+  "tonicExample": "const nuonce = require('nuonce/stripped');\nvar i = 0;\nconst test = nuonce(() => ++i); console.log(test(), test());"
 }

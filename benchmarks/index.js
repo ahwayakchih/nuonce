@@ -1,11 +1,15 @@
-const benchmark = require('benchmark').Suite;
-const results   = require('beautify-benchmark');
-const once      = require('once');
-const oncejs    = require('once.js/once.min.js');
-const onetime   = require('onetime');
-const os        = require('os');
-const nuonce    = require('../index.js');
-const support   = require('../test/support/fn.js');
+const benchmark  = require('benchmark').Suite;
+const results    = require('beautify-benchmark');
+const once       = require('once');
+const oncejs     = require('once.js/once.min.js');
+const onetime    = require('onetime');
+const os         = require('os');
+const support    = require('../test/support/fn.js');
+
+const stripped   = require('../stripped.js');
+const observable = require('../observable.js');
+const copied     = require('../copied.js');
+const proxied    = require('../proxied.js');
 
 if (process.env.INFO) {
 	logInfo(['once', 'once.js', 'onetime', '..']);
@@ -18,13 +22,12 @@ const multiple = parseInt(process.env.CALLS || '1', 10);
 const test = benchmark('nuonce');
 const testTarget = support.createFn(args, props);
 
-test.add('once.js', function () {
-	var f = oncejs(testTarget);
-	return support.repeatFn(f, args, multiple);
+test.add('_warmup', function () {
+	return support.repeatFn(function () { return {}; }, args, multiple);
 });
 
-test.add('onetime', function () {
-	var f = onetime(testTarget, false);
+test.add('once.js', function () {
+	var f = oncejs(testTarget);
 	return support.repeatFn(f, args, multiple);
 });
 
@@ -34,27 +37,63 @@ test.add('once', function () {
 });
 
 test.add('nuonce.stripped', function () {
-	var f = nuonce.stripped(testTarget);
+	var f = stripped(testTarget);
+	return support.repeatFn(f, args, multiple);
+});
+
+test.add('nuonce.observable', function () {
+	var f = observable(testTarget);
+	return support.repeatFn(f, args, multiple);
+});
+
+test.add('nuonce.observable + callback', function () {
+	var f = observable(testTarget, function (status) {
+		status.cb = null;
+		f.called = status.calls;
+		return f.value = status.value;
+	});
+	f.called = 0;
+	f.value = undefined;
 	return support.repeatFn(f, args, multiple);
 });
 
 test.add('nuonce.copied', function () {
-	var f = nuonce.copied(testTarget);
+	var f = copied(testTarget);
 	return support.repeatFn(f, args, multiple);
 });
 
-test.add('nuonce.copied + called', function () {
-	var f = nuonce.copied(testTarget, function (r) {
-		f.value = r;
-		f.called = true;
+test.add('nuonce.copied + callback', function () {
+	var f = copied(testTarget, function (status) {
+		status.cb = null;
+		f.called = status.calls;
+		return f.value = status.value;
 	});
-	f.called = false;
+	f.called = 0;
 	f.value = undefined;
 	return support.repeatFn(f, args, multiple);
 });
 
 test.add('nuonce.proxied', function () {
-	var f = nuonce.proxied(testTarget);
+	var f = proxied(testTarget);
+	return support.repeatFn(f, args, multiple);
+});
+
+test.add('nuonce.proxied + callback', function () {
+	var f = proxied(testTarget, function (status) {
+		status.cb = null;
+		f.called = status.calls;
+		return f.value = status.value;
+	});
+	f.called = 0;
+	f.value = undefined;
+	return support.repeatFn(f, args, multiple);
+});
+
+// Run `onetime` last - it's results are the same no matter if it's tested
+// first, last or in the middle, but it does impact other results by lowering 
+// them all. By keeping it last comparison is same, but highscores are not impacted.
+test.add('onetime', function () {
+	var f = onetime(testTarget, false);
 	return support.repeatFn(f, args, multiple);
 });
 
@@ -68,7 +107,13 @@ test.on('start', function () {
 });
 
 test.on('cycle', function (event) {
-	results.add(event.target);
+	if (event.target.name !== '_warmup') {
+		results.add(event.target);
+	}
+	else if (process.stdout && process.stdout.isTTY) {
+		process.stdout.write('   warmup finished.\u000D');
+	}
+
 	if (typeof global.gc === 'function') {	
 		global.gc();
 	}
