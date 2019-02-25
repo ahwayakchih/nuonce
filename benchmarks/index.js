@@ -69,6 +69,9 @@ test.on('start', function () {
 
 test.on('cycle', function (event) {
 	results.add(event.target);
+	if (typeof global.gc === 'function') {	
+		global.gc();
+	}
 });
 
 test.on('complete', function () {
