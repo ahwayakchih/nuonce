@@ -36,6 +36,13 @@ test.add('once', function () {
 	return support.repeatFn(f, args, multiple);
 });
 
+if (multiple < 2) {
+	test.add('once.strict', function () {
+		var f = once.strict(testTarget);
+		return support.repeatFn(f, args, multiple);
+	});
+}
+
 test.add('nuonce.stripped', function () {
 	var f = stripped(testTarget);
 	return support.repeatFn(f, args, multiple);
