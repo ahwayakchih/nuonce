@@ -64,7 +64,7 @@ function observable (fn, cb) {
 
 	var status = {
 		calls: 0,
-		value: undefined,
+		value: undefined, // eslint-disable-line no-undefined
 		cb
 	};
 
@@ -75,7 +75,7 @@ function observable (fn, cb) {
 	return function _f () {
 		if (fn) {
 			// Use `...args` in future, when it's not so much slower than `arguments`.
-			status.value = fn.apply(this, arguments);
+			status.value = fn.apply(this, arguments); // eslint-disable-line no-invalid-this
 
 			// Free any references to the target function
 			fn = null;
@@ -83,5 +83,5 @@ function observable (fn, cb) {
 
 		status.calls++;
 		return status.cb ? status.cb(status) : status.value;
-	}
+	};
 }

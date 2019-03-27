@@ -11,7 +11,7 @@ module.exports = copied;
  * @type {Function[]}
  */
 var _stripped = [
-	require('./stripped.js')
+	require('./stripped.js') // eslint-disable-line global-require
 ];
 
 /**
@@ -21,7 +21,7 @@ var _stripped = [
  * @type {Function[]}
  */
 var _observable = [
-	require('./observable.js')
+	require('./observable.js') // eslint-disable-line global-require
 ];
 
 /**
@@ -51,7 +51,7 @@ _observable.code = _observable[0].toString()
  *
  * @private
  * @param {Array}  cache
- * @param {Number} length
+ * @param {number} length
  * @return {Function}
  */
 function _nuoncesPrepare (cache, length) {

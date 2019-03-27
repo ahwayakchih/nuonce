@@ -44,12 +44,12 @@ function proxied (fn, cb) {
 
 	var status = {
 		calls: 0,
-		value: undefined,
+		value: undefined, // eslint-disable-line no-undefined
 		cb
 	};
 
 	return new Proxy(fn, {
-		apply: function (_, ctx, args) {
+		apply (_, ctx, args) {
 			if (fn) {
 				status.value = _.apply(ctx, args);
 				fn = null;
@@ -58,7 +58,7 @@ function proxied (fn, cb) {
 			status.calls++;
 			return status.cb ? status.cb(status) : status.value;
 		},
-		construct: function (_, args) {
+		construct (_, args) {
 			if (fn) {
 				status.value = new _(...args);
 				fn = null;

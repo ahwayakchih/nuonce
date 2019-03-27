@@ -48,12 +48,12 @@ function stripped (fn) {
 	return function _f () {
 		if (fn) {
 			// Use `...args` in future, when it's not so much slower than `arguments`.
-			r = fn.apply(this, arguments);
+			r = fn.apply(this, arguments); // eslint-disable-line no-invalid-this,prefer-rest-params
 
 			// Free any references to the target function
 			fn = null;
 		}
 
 		return r;
-	}
+	};
 }
