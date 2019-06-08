@@ -1,7 +1,7 @@
 module.exports = {
 	root: true,
 	parserOptions: {
-		ecmaVersion: 2018,
+		ecmaVersion: 2019,
 		sourceType: 'module',
 		ecmaFeatures: {
 			impliedStrict: true
@@ -15,6 +15,9 @@ module.exports = {
 		'jsdoc'
 	],
 	extends: 'eslint:recommended',
+	globals: {
+		'BigInt': 'readable'
+	},
 	rules: {
 		// Possible Errors
 		// 'for-direction': 2, // inherited
@@ -138,7 +141,7 @@ module.exports = {
 		'prefer-promise-reject-errors': 2,
 		'radix': 2,
 		'require-await': 2,
-		// 'require-unicode-regexp': 2,
+		// 'require-unicode-regexp': 0,
 		'vars-on-top': 0,
 		'wrap-iife': [2, 'inside'],
 		'yoda': 2,
@@ -175,9 +178,9 @@ module.exports = {
 		'no-sync': 0,
 
 		// Stylistic Issues
-		// 'array-bracket-newline': [2, {multiline: true, minItems: 2}],
+		// 'array-bracket-newline': [2, {multiline: true, minItems: 5}],
 		'array-bracket-spacing': [2, 'never'],
-		// 'array-element-newline': [2, {multiline: true, minItems: 2}],
+		'array-element-newline': [2, {multiline: true, minItems: 5}],
 		'block-spacing': 2,
 		'brace-style': [2, 'stroustrup', {allowSingleLine: false}],
 		'camelcase': [2, {properties: 'never'}],
@@ -206,14 +209,14 @@ module.exports = {
 		'lines-between-class-members': [2, 'always', {exceptAfterSingleLine: true}],
 		'max-depth': [1, 4],
 		// 'max-lines': [2, 300],
-		'max-lines-per-function': [2, {max: 50, skipBlankLines: true}],
+		'max-lines-per-function': [2, {max: 50, skipBlankLines: true, skipComments: true}],
 		'max-nested-callbacks': [1, 4],
 		'max-params': [2, 4],
 		// 'max-statements': [2, 30],
 		'max-statements-per-line': 2,
 		'multiline-comment-style': [2, 'starred-block'],
 		'multiline-ternary': [2, 'always-multiline'],
-		'new-cap': [2, {newIsCap: true, capIsNew: true}],
+		'new-cap': [2, {newIsCap: true, capIsNew: true, capIsNewExceptions: ['BigInt']}],
 		'new-parens': 2,
 		'newline-per-chained-call': 2,
 		'no-array-constructor': 2,
@@ -233,7 +236,7 @@ module.exports = {
 		// 'no-tabs': 0,
 		// 'no-ternary': 0,
 		'no-trailing-spaces': 2,
-		// 'no-underscore-dangle': 2,
+		// 'no-underscore-dangle': 1,
 		'no-unneeded-ternary': 2,
 		'no-whitespace-before-property': 2,
 		'nonblock-statement-body-position': [2, 'beside'],
@@ -300,12 +303,14 @@ module.exports = {
 		'yield-star-spacing': [2, 'both'],
 
 		// JSDoc
-		'jsdoc/check-examples': 1,
+		'jsdoc/check-alignment': 1,
+		'jsdoc/check-examples': 0,
+		'jsdoc/check-indentation': 0,
 		'jsdoc/check-param-names': 1,
+		'jsdoc/check-syntax': 0,
 		'jsdoc/check-tag-names': 1,
 		'jsdoc/check-types': 1,
 		'jsdoc/newline-after-description': 1,
-		'jsdoc/no-undefined-types': 0,
 		'jsdoc/require-description': 0,
 		'jsdoc/require-description-complete-sentence': 0,
 		'jsdoc/require-example': 0,
@@ -318,7 +323,8 @@ module.exports = {
 		'jsdoc/require-returns-check': 1,
 		'jsdoc/require-returns-description': 0,
 		'jsdoc/require-returns-type': 1,
-		'jsdoc/valid-types': 1
+		'jsdoc/valid-types': 1,
+		'jsdoc/no-undefined-types': 0
 	},
 	settings: {
 		jsdoc: {
