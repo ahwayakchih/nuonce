@@ -24,7 +24,8 @@
     "postcheckCoverage": "echo Coverage results saved to '`reports/coverage/index.html`'",
     "precheckMemory": "rm -rf ./reports/*.heapsnapshot",
     "checkMemory": "node --expose-gc ./test/memory.js",
-    "postcheckMemory": "echo 'heapsnapshots created in `reports` directory'"
+    "postcheckMemory": "echo 'heapsnapshots created in `reports` directory'",
+    "checkAudit": "npm shrinkwrap && npm audit > ./reports/audit.log || cat ./reports/audit.log; rm npm-shrinkwrap.json"
   },
   "engines": {
     "node": ">=6.9"
@@ -34,10 +35,10 @@
     "benchmark": "^2.1.4",
     "c8": "^5.0.1",
     "docdash": "^1.1.1",
-    "eslint": "^5.16.0",
-    "eslint-plugin-jsdoc": "^7.2.3",
+    "eslint": "^6.0.1",
+    "eslint-plugin-jsdoc": "^10.0.0",
     "heapdump": "^0.3.14",
-    "jsdoc": "github:jsdoc3/jsdoc",
+    "jsdoc": "^3.6.2",
     "once": "^1.4.0",
     "once.js": "daniellmb/once.js",
     "onetime": "^5.1.0",

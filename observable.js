@@ -9,7 +9,7 @@ module.exports = observable;
  *
  * Set `cb` to null to stop "observing".
  *
- * @typedef {Object} module:nuonce.observableStatus
+ * @typedef {object} module:nuonce.observableStatus
  * @property {number}   calls   number of times observed function was called
  * @property {any}      value   value returned by target function
  * @property {Function} cb      function to be called each time observed function is called
