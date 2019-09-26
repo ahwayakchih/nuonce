@@ -15,7 +15,7 @@ var _stripped = [
 ];
 
 /**
- * List of `stripped` versions for different lengths of arguments.
+ * List of `observable` versions for different lengths of arguments.
  *
  * @private
  * @type {Function[]}
