@@ -17,6 +17,9 @@ const NO_ARGS = 0;
 const ONE_ARG = 1;
 const TWO_ARGS = 2;
 
+const NO_PROPS = 0;
+const ONE_PROP = 1;
+
 test('nuonce', t => {
 	t.ok(support.vmHasFastProperties(nuonces), 'Should export object with fast properties');
 	t.end();
@@ -162,10 +165,11 @@ function testIfItCallsBackAfterEveryCallWhenProxied (nuonce, t) {
 }
 
 function testIfItCanBeOptimized (nuonce, t) {
-	nuonce(support.createFn(NO_ARGS));
-	nuonce(support.createFn(TWO_ARGS, {foo: 1}));
+	support.vmPrepareForOptimization(nuonce);
+	nuonce(support.createFn(NO_ARGS, NO_PROPS));
+	nuonce(support.createFn(TWO_ARGS, ONE_PROP));
 	support.vmOptimizeOnNextCall(nuonce);
-	nuonce(support.createFn(ONE_ARG));
+	nuonce(support.createFn(ONE_ARG, NO_PROPS));
 
 	const status = support.vmGetOptimizationStatus(nuonce);
 	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
@@ -178,10 +182,11 @@ function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
 	support.vmDeoptimize(nuonce);
 	t.strictEqual(support.vmGetOptimizationStatus(nuonce), support.OPTIMIZATION.NONE, 'Should be unoptimized at start of test');
 
-	nuonce(support.createFn(NO_ARGS, null, true));
-	nuonce(support.createFn(ONE_ARG, {foo: 1}, true));
+	support.vmPrepareForOptimization(nuonce);
+	nuonce(support.createFn(NO_ARGS, NO_PROPS, true));
+	nuonce(support.createFn(ONE_ARG, ONE_PROP, true));
 
-	const target = support.createFn(TWO_ARGS, null, true);
+	const target = support.createFn(TWO_ARGS, NO_PROPS, true);
 	t.strictEqual(support.vmGetOptimizationStatus(target), support.OPTIMIZATION.NONE, 'Target function should be unoptimizable');
 
 	support.vmOptimizeOnNextCall(nuonce);

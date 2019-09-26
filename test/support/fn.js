@@ -67,6 +67,11 @@ function _addPropsToFn (fn, propc) {
 	var key = 'foo';
 	fn[key] = () => Math.random();
 
+	if (typeof propc !== 'number') {
+		console.error(new Error('`propc` should be a number'));
+		return fn;
+	}
+
 	for (var i = 1; i < propc; i++) {
 		key = 'foo' + String(Math.random()).substr(2); // eslint-disable-line no-magic-numbers
 		fn[key] = () => Math.random();
