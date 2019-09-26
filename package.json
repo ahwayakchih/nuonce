@@ -33,10 +33,10 @@
   "devDependencies": {
     "beautify-benchmark": "ahwayakchih/beautify-benchmark",
     "benchmark": "^2.1.4",
-    "c8": "^5.0.1",
+    "c8": "^5.0.4",
     "docdash": "^1.1.1",
-    "eslint": "^6.0.1",
-    "eslint-plugin-jsdoc": "^10.2.0",
+    "eslint": "^6.4.0",
+    "eslint-plugin-jsdoc": "^15.9.3",
     "heapdump": "^0.3.14",
     "jsdoc": "^3.6.2",
     "once": "^1.4.0",
