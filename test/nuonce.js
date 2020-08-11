@@ -169,8 +169,9 @@ function testIfItCanBeOptimized (nuonce, t) {
 	nuonce(support.createFn(NO_ARGS, NO_PROPS));
 	nuonce(support.createFn(TWO_ARGS, ONE_PROP));
 	support.vmOptimizeOnNextCall(nuonce);
-	nuonce(support.createFn(ONE_ARG, NO_PROPS));
-
+	// Single call is not enough to optimize any more (starting around v14?), so call it many many times ;P
+	for (let i = 10000; i > 0; i--) nuonce(support.createFn(ONE_ARG, NO_PROPS));
+	// nuonce(support.createFn(ONE_ARG, NO_PROPS));
 	const status = support.vmGetOptimizationStatus(nuonce);
 	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
 	t.ok(optimized, 'Should be optimizable');
@@ -190,7 +191,8 @@ function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
 	t.strictEqual(support.vmGetOptimizationStatus(target), support.OPTIMIZATION.NONE, 'Target function should be unoptimizable');
 
 	support.vmOptimizeOnNextCall(nuonce);
-	nuonce(target);
+	// Single call is not enough to optimize any more (starting around v14?), so call it many many times ;P
+	for (let i = 100000; i > 0; i--) nuonce(target);
 
 	const status = support.vmGetOptimizationStatus(nuonce);
 	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;

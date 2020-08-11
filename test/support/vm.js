@@ -64,12 +64,28 @@ function vmPrepareForOptimization (fn) {
 		return false;
 	}
 
+	// Sometime around Node v14 calling `OptimizeFunctionOnNextCall` on function that was marked with
+	// `NeverOptimizeFunction` started crashing. So try to prevent that.
+	const status = eval('%GetOptimizationStatus(fn)');
+	if (status & V8OptimizationStatus.kNeverOptimize == V8OptimizationStatus.kNeverOptimize) {
+		// console.warn('Function marked to never be optimized will not be optimized');
+		return false;
+	}
+
 	return eval('%PrepareFunctionForOptimization(fn)');
 }
 
 function vmOptimizeOnNextCall (fn) {
 	if (!hasNativeSyntax) {
 		console.warn('Native syntax is not enabled. Use `--allow-natives-syntax` flag when running node to enable it.');
+		return false;
+	}
+
+	// Sometime around Node v14 calling `OptimizeFunctionOnNextCall` on function that was marked with
+	// `NeverOptimizeFunction` started crashing. So try to prevent that.
+	const status = eval('%GetOptimizationStatus(fn)');
+	if (status & V8OptimizationStatus.kNeverOptimize == V8OptimizationStatus.kNeverOptimize) {
+		// console.warn('Function marked to never be optimized will not be optimized');
 		return false;
 	}
 
@@ -102,7 +118,7 @@ function vmGetOptimizationStatus (fn) {
 	}
 
 	const result = eval('%GetOptimizationStatus(fn)');
-	// console.log(result.toString('2'));
+	// console.log('GetOptimizationStatus=', result.toString('2'));
 
 	if (Number(process.version.split('.')[0].replace('v', '')) < 8) {
 		return result;

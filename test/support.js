@@ -49,6 +49,7 @@ function testCreateFnPropc (t, propcMax) {
 function testCreateFnUnoptimizable (t) {
 	var fn = support.createFn(1, 0, true);
 
+	natives.vmPrepareForOptimization(fn);
 	fn(1);
 	fn(maxNumOfArgsAndProps);
 	natives.vmOptimizeOnNextCall(fn);
