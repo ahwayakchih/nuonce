@@ -1,11 +1,11 @@
 {
   "name": "nuonce",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "description": "Nuanced implementation of 'once' functionality, optimized for node.js",
   "keywords": "once, single, function, call, run, node",
   "main": "index.js",
   "scripts": {
-    "test": "node --allow-natives-syntax --trace-deopt --code-comments ./test/index.js | tap-diff",
+    "test": "node --allow-natives-syntax --trace-deopt --no-concurrent_recompilation --trace-file-names ./test/index.js | tap-diff",
     "prepublishOnly": "npm run -s test && npm run -s checkStyle",
     "benchmark": "INFO=1 node --expose-gc $NODE_FLAGS ./benchmarks/index.js",
     "benchmarks": "(INFO=1 npm run -s benchmark1call0props && npm run -s benchmark50calls0props && npm run -s benchmark1call3props && npm run -s benchmark50calls3props) > ./reports/benchmarks.txt",

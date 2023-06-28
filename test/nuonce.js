@@ -165,6 +165,8 @@ function testIfItCallsBackAfterEveryCallWhenProxied (nuonce, t) {
 }
 
 function testIfItCanBeOptimized (nuonce, t) {
+	t.strictEqual(support.vmIsFunctionOptimized(nuonce), false, 'Should be unoptimized at start of test');
+
 	support.vmPrepareForOptimization(nuonce);
 	nuonce(support.createFn(NO_ARGS, NO_PROPS));
 	nuonce(support.createFn(TWO_ARGS, ONE_PROP));
@@ -172,31 +174,29 @@ function testIfItCanBeOptimized (nuonce, t) {
 	// Single call is not enough to optimize any more (starting around v14?), so call it many many times ;P
 	for (let i = 10000; i > 0; i--) nuonce(support.createFn(ONE_ARG, NO_PROPS));
 	// nuonce(support.createFn(ONE_ARG, NO_PROPS));
-	const status = support.vmGetOptimizationStatus(nuonce);
-	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
-	t.ok(optimized, 'Should be optimizable');
+	t.strictEqual(support.vmIsFunctionOptimized(nuonce), true, 'Should be optimizable');
 }
 
 function testIfItCanBeOptimizedWhenTargetFnIsUnoptimizable (nuonce, t) {
 	// This may output deoptimization info, especially if run after `testIfItCanBeOptimized`,
 	// where we optimize code :/.
 	support.vmDeoptimize(nuonce);
-	t.strictEqual(support.vmGetOptimizationStatus(nuonce), support.OPTIMIZATION.NONE, 'Should be unoptimized at start of test');
+	t.strictEqual(support.vmIsFunctionOptimized(nuonce), false, 'Should be unoptimized at start of test');
 
 	support.vmPrepareForOptimization(nuonce);
 	nuonce(support.createFn(NO_ARGS, NO_PROPS, true));
 	nuonce(support.createFn(ONE_ARG, ONE_PROP, true));
 
 	const target = support.createFn(TWO_ARGS, NO_PROPS, true);
-	t.strictEqual(support.vmGetOptimizationStatus(target), support.OPTIMIZATION.NONE, 'Target function should be unoptimizable');
 
 	support.vmOptimizeOnNextCall(nuonce);
 	// Single call is not enough to optimize any more (starting around v14?), so call it many many times ;P
-	for (let i = 100000; i > 0; i--) nuonce(target);
+	for (let i = 100000; i > 0; i--) {
+		nuonce(target)();
+	}
 
-	const status = support.vmGetOptimizationStatus(nuonce);
-	const optimized = status === support.OPTIMIZATION.OK || status === support.OPTIMIZATION.TURBO;
-	t.ok(optimized, 'Should be optimizable even when target function is unoptimizable');
+	t.strictEqual(support.vmIsFunctionOptimized(target), false, 'Should be stay unoptimized');
+	t.strictEqual(support.vmIsFunctionOptimized(nuonce), true, 'Should be optimizable even when target function is unoptimizable');
 }
 
 function testIfReturnedFunctionHasPropertiesRemoved (nuonce, t) {

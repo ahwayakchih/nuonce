@@ -16,6 +16,7 @@ test('support.createFn', t => {
 
 	testCreateFnArgc(t, maxNumOfArgsAndProps);
 	testCreateFnPropc(t, maxNumOfArgsAndProps);
+	testCreateFnOptimizable(t);
 	testCreateFnUnoptimizable(t);
 
 	t.end();
@@ -46,16 +47,33 @@ function testCreateFnPropc (t, propcMax) {
 	}
 }
 
-function testCreateFnUnoptimizable (t) {
-	var fn = support.createFn(1, 0, true);
+function testCreateFnOptimizable (t) {
+	var fn = support.createFn(1, 0, false);
+	t.strictEqual(natives.vmIsFunctionOptimized(fn), false, 'Should return unoptimized function');
 
 	natives.vmPrepareForOptimization(fn);
 	fn(1);
 	fn(maxNumOfArgsAndProps);
 	natives.vmOptimizeOnNextCall(fn);
 	fn(maxNumOfArgsAndProps - 1);
+	for (let i = 100000; i > 0; i--) fn(i);
 
-	t.strictEqual(natives.vmGetOptimizationStatus(fn), natives.OPTIMIZATION.NONE, 'Should return unoptimizable function');
+	// console.log(natives.vmGetOptimizationStatusObject(fn));
+	t.strictEqual(natives.vmIsFunctionOptimized(fn), true, 'Returned function should become optimized');
+}
+
+function testCreateFnUnoptimizable (t) {
+	var fn = support.createFn(1, 0, true);
+	t.strictEqual(natives.vmIsFunctionOptimized(fn), false, 'Should return unoptimized function');
+
+	natives.vmPrepareForOptimization(fn);
+	fn(1);
+	fn(maxNumOfArgsAndProps);
+	natives.vmOptimizeOnNextCall(fn);
+	fn(maxNumOfArgsAndProps - 1);
+	for (let i = 100000; i > 0; i--) fn(i);
+
+	t.strictEqual(natives.vmIsFunctionOptimized(fn), false, 'Returned function should stay unoptimized');
 }
 
 function testRepeatFn (t, max, prop) {

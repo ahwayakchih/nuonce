@@ -1,8 +1,14 @@
+const fs = require('fs');
+
 const benchmark  = require('benchmark').Suite;
 const results    = require('beautify-benchmark');
 const once       = require('once');
 const oncejs     = require('once.js/once.min.js');
-const onetime    = require('onetime');
+
+const imports = [
+	import('onetime').then(m => {imports.onetime = m.default})
+];
+
 const os         = require('os');
 const support    = require('../test/support/fn.js');
 
@@ -100,7 +106,7 @@ test.add('nuonce.proxied + callback', function () {
 // first, last or in the middle, but it does impact other results by lowering 
 // them all. By keeping it last comparison is same, but highscores are not impacted.
 test.add('onetime', function () {
-	var f = onetime(testTarget, false);
+	var f = imports.onetime(testTarget, false);
 	return support.repeatFn(f, args, multiple);
 });
 
@@ -131,9 +137,27 @@ test.on('complete', function () {
 	results.log();
 });
 
-test.run({
-	async: false
+// TODO: whole benchmark should be rewritten.
+//       For now, just wait for imports to be done before starting the run.
+var importsDone = false;
+Promise.all(imports).then(() => {
+	importsDone = true;
+	test.run({
+		async: false
+	});
 });
+function waitForImports() {
+	if (importsDone) {
+		return;
+	}
+
+	if (process.stdout && process.stdout.isTTY) {
+		process.stdout.write(`${Date.now()} waiting for imports...\u000D`);
+	}
+
+	setImmediate(waitForImports);
+}
+waitForImports();
 
 /**
  * Show info about environment and compared packages.
@@ -142,7 +166,6 @@ test.run({
  */
 function logInfo (packages) {
 	var container = (function checkContainer () {
-		const fs = require('fs');
 		try {
 			return (process.env.container || fs.readFileSync('/proc/self/cgroup', 'utf8').indexOf('/docker/') !== -1)
 				&& (fs.readFileSync('/etc/os-release', 'utf8').match(/PRETTY_NAME="([^"]+)"/) || [,'unknown'])[1]
