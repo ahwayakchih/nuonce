@@ -4,8 +4,7 @@
 'use strict';
 
 const nuonce = require('../index.js');
-const heapdump = require('heapdump');
-// const profiler = require('v8-profiler');
+const v8 = require('v8');
 
 const modes = [
 	'stripped',
@@ -18,28 +17,32 @@ if (nuonce.proxied) {
 
 function fakeTestOnce (once) {
 	const testFunction = once(Math.random);
-	testFunction();
-	testFunction();
-	testFunction();
+	const result = testFunction();
+	if (result !== testFunction()) console.error(new Error('Results should be the same'));
 }
 
 function fakeTest () {
 	for (let m = 0; m < modes.length; m++) {
-		for (let i = 0; i < 10000; i++) {
+		for (let i = 0; i < 1000000; i++) {
 			fakeTestOnce(nuonce[modes[m]]);
 		}
 	}
 }
 
 if (typeof gc !== 'function') {
+	v8.setFlagsFromString('--expose-gc');
 	console.error('`gc` function is missing. Make sure to run this test with `--expose-gc` option passed to node.');
 	process.exit(1);
 }
 
-gc();
-heapdump.writeSnapshot('reports/test-memory-0.heapsnapshot');
+v8.setFlagsFromString('--trace-gc');
 
+gc();
+v8.writeHeapSnapshot('reports/test-memory-0.heapsnapshot');
+
+console.log('start test');
 fakeTest();
+console.log('end test');
 
 gc();
-heapdump.writeSnapshot('reports/test-memory-1.heapsnapshot');
+v8.writeHeapSnapshot('reports/test-memory-1.heapsnapshot');

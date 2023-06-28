@@ -23,7 +23,7 @@
     "checkCoverage": "c8 --clean --report --reporter text --reporter html --reports-dir reports/coverage node --allow-natives-syntax ./test/index.js",
     "postcheckCoverage": "echo Coverage results saved to '`reports/coverage/index.html`'",
     "precheckMemory": "rm -rf ./reports/*.heapsnapshot",
-    "checkMemory": "node --expose-gc ./test/memory.js",
+    "checkMemory": "node --expose-gc --trace-gc ./test/memory.js",
     "postcheckMemory": "echo 'heapsnapshots created in `reports` directory'",
     "checkAudit": "npm shrinkwrap && npm audit > ./reports/audit.log || cat ./reports/audit.log; rm npm-shrinkwrap.json"
   },
@@ -37,7 +37,6 @@
     "docdash": "^1.2.0",
     "eslint": "^7.26.0",
     "eslint-plugin-jsdoc": "^34.0.2",
-    "heapdump": "^0.3.14",
     "jsdoc": "^3.6.6",
     "once": "^1.4.0",
     "once.js": "daniellmb/once.js",
