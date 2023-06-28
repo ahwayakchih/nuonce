@@ -1,13 +1,14 @@
 const fs = require('fs');
+const path = require('path');
 
 const benchmark  = require('benchmark').Suite;
 const results    = require('beautify-benchmark');
 const once       = require('once');
 const oncejs     = require('once.js/once.min.js');
 
-const imports = [
-	import('onetime').then(m => {imports.onetime = m.default})
-];
+const imports = {
+	onetime: import('onetime').then(m => {imports.onetime = m.default})
+};
 
 const os         = require('os');
 const support    = require('../test/support/fn.js');
@@ -140,7 +141,7 @@ test.on('complete', function () {
 // TODO: whole benchmark should be rewritten.
 //       For now, just wait for imports to be done before starting the run.
 var importsDone = false;
-Promise.all(imports).then(() => {
+Promise.all(Object.values(imports)).then(() => {
 	importsDone = true;
 	test.run({
 		async: false
@@ -182,7 +183,17 @@ function logInfo (packages) {
 	var columns = columnsCreate(['name', 'version', 'homepage']);
 
 	var rows = packages.map(name => {
-		var row = require(name + '/package.json');
+		var row = null;
+		try {
+			row = require(name + '/package.json');
+		} catch (err) {
+			if (imports[name] && err.code === 'ERR_PACKAGE_PATH_NOT_EXPORTED') {
+				row = JSON.parse(fs.readFileSync(path.join(path.dirname(require.resolve(name)), 'package.json')));
+			}
+			else {
+				throw err;
+			}
+		}
 		row.version = 'v' + row.version;
 		columnsUpdate(columns, row);
 		return row;
