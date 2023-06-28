@@ -310,7 +310,6 @@ module.exports = {
 		'jsdoc/check-syntax': 0,
 		'jsdoc/check-tag-names': 1,
 		'jsdoc/check-types': 1,
-		'jsdoc/newline-after-description': 1,
 		'jsdoc/require-description': 0,
 		'jsdoc/require-description-complete-sentence': 0,
 		'jsdoc/require-example': 0,
